@@ -8,5 +8,6 @@ func main() {
 		outStream: os.Stdout,
 		errStream: os.Stderr,
 	}
-	os.Exit(cli.run())
+	os.Exit(cli.run(os.Args))
+
 }
