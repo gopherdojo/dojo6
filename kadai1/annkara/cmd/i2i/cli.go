@@ -47,6 +47,13 @@ func (c *cli) walk(root, before, after string) error {
 
 			err = image.Convert(origin, out, after)
 			if err != nil {
+				// 変換処理に失敗した場合、不要なファイルが作成されてしまうため、削除する
+				// ファイルを閉じた後でないと、Windowsの場合削除できないのでここでCloseする
+				out.Close()
+				e := os.Remove(filepath.Join(dir, n+"."+after))
+				if e != nil {
+					return e
+				}
 				return err
 			}
 		}
