@@ -1,10 +1,10 @@
 package imgcnv
 
 import (
+	"fmt"
 	"image"
 	"image/jpeg"
 	"image/png"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -57,13 +57,11 @@ func (img *ImageFile) AbsPath() string {
 func (img *ImageFile) SaveAs(path string) error {
 	err := os.MkdirAll(filepath.Dir(path), 0777)
 	if err != nil {
-		log.Println(err)
-		return nil
+		return err
 	}
 	file, err := os.Create(path)
 	if err != nil {
-		log.Println(err)
-		return nil
+		return err
 	}
 	ext := filepath.Ext(path)
 	switch ext {
@@ -72,6 +70,6 @@ func (img *ImageFile) SaveAs(path string) error {
 	case ".png":
 		return png.Encode(file, *img.image)
 	default:
-		return nil
+		return fmt.Errorf("Unexpected extension")
 	}
 }
