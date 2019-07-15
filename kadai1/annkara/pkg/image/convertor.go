@@ -9,7 +9,7 @@ import (
 )
 
 // Convert is the function that converts an image format to another image format.
-// origin is orifinal file, target is converted image, and format is target image format.
+// origin is original file, target is converted image, and format is target image format.
 func Convert(origin io.Reader, target io.Writer, format string) error {
 
 	var err error
