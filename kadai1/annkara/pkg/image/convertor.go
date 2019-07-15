@@ -1,3 +1,4 @@
+// Package image provides image convert function.
 package image
 
 import (
