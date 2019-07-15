@@ -77,10 +77,10 @@ func (c *cli) run(args []string) int {
 		fmt.Fprint(c.errStream, helpText)
 	}
 
-	flags.StringVar(&before, "b", "jpg", "変換後の画像形式を指定")
-	flags.StringVar(&before, "before", "jpg", "変換後の画像形式を指定")
-	flags.StringVar(&after, "a", "png", "変換対象の画像形式を指定")
-	flags.StringVar(&after, "after", "png", "変換対象の画像形式を指定")
+	flags.StringVar(&before, "b", "jpg", "変換前の画像形式を指定")
+	flags.StringVar(&before, "before", "jpg", "変換前の画像形式を指定")
+	flags.StringVar(&after, "a", "png", "変換後の画像形式を指定")
+	flags.StringVar(&after, "after", "png", "変換後の画像形式を指定")
 	flags.BoolVar(&debug, "debug", false, "")
 
 	if err := flags.Parse(args[1:]); err != nil {
