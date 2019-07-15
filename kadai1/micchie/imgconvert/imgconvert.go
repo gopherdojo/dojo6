@@ -39,19 +39,19 @@ type ConvertImage struct {
 func (cnv ConvertImage) Convert(format string) error {
 	bp, err := os.Open(string(cnv.Before))
 	if err != nil {
-		return err // TODO:
+		return err
 	}
 	defer bp.Close()
 
 	ap, err := os.Create(string(cnv.After))
 	if err != nil {
-		return err // TODO:
+		return err
 	}
 	defer ap.Close()
 
 	img, _, err := image.Decode(bp)
 	if err != nil {
-		return err // TODO:
+		return err
 	}
 
 	switch format {
@@ -63,7 +63,7 @@ func (cnv ConvertImage) Convert(format string) error {
 	}
 
 	if err != nil {
-		return err // TODO:
+		return err
 	}
 	return nil
 }
