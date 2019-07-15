@@ -31,7 +31,7 @@ func (c *cli) walk(root, target, format string) error {
 
 		n := info.Name()
 		if strings.HasSuffix(n, target) {
-			origin, err := os.Open(n)
+			origin, err := os.Open(path)
 			if err != nil {
 				return err
 			}
@@ -39,7 +39,8 @@ func (c *cli) walk(root, target, format string) error {
 
 			// 拡張子を含まない出力用ファイル名
 			n := filepath.Base(n[:len(n)-len(filepath.Ext(n))])
-			out, err := os.Create(n + "." + format)
+			dir := filepath.Dir(path)
+			out, err := os.Create(filepath.Join(dir, n+"."+format))
 			if err != nil {
 				return err
 			}
@@ -67,6 +68,7 @@ func (c *cli) run(args []string) int {
 	var (
 		after  string
 		target string
+		debug  bool
 	)
 
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -78,15 +80,21 @@ func (c *cli) run(args []string) int {
 	flags.StringVar(&after, "after", "jpg", "変換対象の画像形式を指定")
 	flags.StringVar(&target, "t", "png", "変換後の画像形式を指定")
 	flags.StringVar(&target, "target", "png", "変換後の画像形式を指定")
+	flags.BoolVar(&debug, "debug", false, "")
 
 	if err := flags.Parse(args[1:]); err != nil {
+		if debug {
+			log.Printf("failed: %+v\n", err)
+		}
 		return exitCodeErr
 	}
 
 	for _, v := range flags.Args() {
-		r, err := filepath.Abs(v)
-		err = c.walk(r, target, after)
+		err := c.walk(v, target, after)
 		if err != nil {
+			if debug {
+				log.Printf("failed: %+v\n", err)
+			}
 			return exitCodeErr
 		}
 	}
