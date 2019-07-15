@@ -9,14 +9,21 @@ import (
 	"path/filepath"
 )
 
-// ImageFile expresses the i
-type ImageFile struct {
+// ImageFile expresses I/F to ImageFileStruct
+type ImageFile interface {
+	AbsPath() string
+	SaveAs(path string) error
+}
+
+// ImageFileStruct expresses the converting image
+type ImageFileStruct struct {
 	image *image.Image
 	path  string
+	ImageFile
 }
 
 // NewImageFile is a constructor of ImageFile
-func NewImageFile(path string) (*ImageFile, error) {
+func NewImageFile(path string) (ImageFile, error) {
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return nil, err
@@ -42,19 +49,19 @@ func NewImageFile(path string) (*ImageFile, error) {
 		return nil, err
 	}
 
-	return &ImageFile{
+	return &ImageFileStruct{
 		image: &image,
 		path:  absPath,
 	}, nil
 }
 
 // AbsPath returns the absolute path of the input file
-func (img *ImageFile) AbsPath() string {
+func (img *ImageFileStruct) AbsPath() string {
 	return img.path
 }
 
 // SaveAs oututs a file to the specified path after convering to the specified exteinsion.
-func (img *ImageFile) SaveAs(path string) error {
+func (img *ImageFileStruct) SaveAs(path string) error {
 	err := os.MkdirAll(filepath.Dir(path), 0777)
 	if err != nil {
 		return err

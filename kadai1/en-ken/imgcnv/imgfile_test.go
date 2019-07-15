@@ -1,6 +1,7 @@
 package imgcnv
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -79,36 +80,26 @@ func TestCanSaveAsExpectedFileFormat(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Log("Test data: ", test.fileName, test.ext, test.expectedExt)
+		testName := fmt.Sprintf("Test data: %v %v %v", test.fileName, test.ext, test.expectedExt)
+		t.Run(testName, func(t *testing.T) {
 
-		inputPath := filepath.Join(inputDir, test.fileName+test.ext)
-		outputPath := filepath.Join(outputDir, test.fileName+test.expectedExt)
+			inputPath := filepath.Join(inputDir, test.fileName+test.ext)
+			outputPath := filepath.Join(outputDir, test.fileName+test.expectedExt)
 
-		imageFile, err := NewImageFile(inputPath)
-		if err != nil {
-			t.Error(err)
-		}
-		err = imageFile.SaveAs(outputPath)
-		if err != nil {
-			t.Error(err)
-		}
-		if !exists(outputPath) {
-			t.Error("No output files")
-		}
+			imageFile, err := NewImageFile(inputPath)
+			if err != nil {
+				t.Error(err)
+			}
+			err = imageFile.SaveAs(outputPath)
+			if err != nil {
+				t.Error(err)
+			}
+			if !exists(outputPath) {
+				t.Error("No output files")
+			}
+		})
 	}
 
-}
-
-func TestCanConstructImageFileFromPngToJpeg(t *testing.T) {
-	const fileName = "layer1/girl_color"
-	inputPath := filepath.Join(inputDir, fileName+".png")
-	outputPath := filepath.Join(outputDir, fileName+".jpg")
-
-	imageFile, err := NewImageFile(inputPath)
-	if err != nil {
-		t.Error(err)
-	}
-	err = imageFile.SaveAs(outputPath)
 }
 
 func exists(filename string) bool {
