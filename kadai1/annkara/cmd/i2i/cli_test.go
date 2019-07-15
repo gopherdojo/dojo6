@@ -22,6 +22,10 @@ func TestRun(t *testing.T) {
 			expectedStatus: exitCodeOK,
 		}, {
 			desc:           "正常終了",
+			arg:            "i2i -after jpeg -target png directory",
+			expectedStatus: exitCodeOK,
+		}, {
+			desc:           "正常終了",
 			arg:            "i2i directory",
 			expectedStatus: exitCodeOK,
 		}, {
