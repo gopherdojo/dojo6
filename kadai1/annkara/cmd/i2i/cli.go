@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	exitCodeOK  = iota
-	exitCodeErr = 10 + iota
+	exitCodeOK  = 0
+	exitCodeErr = 10
 )
 
 type cli struct {
