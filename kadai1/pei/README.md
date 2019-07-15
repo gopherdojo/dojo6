@@ -11,3 +11,36 @@
     - 準標準パッケージ：golang.org/x以下のパッケージ
     - ユーザ定義型を作ってみる
     - GoDocを生成してみる
+
+# imgconv
+
+## Usage
+
+```
+Usage:
+  imgconv [-in_ext] [-out_ext] [-leave] DIR
+Arguments:
+  -in_ext  input extension (jpg, png, gif)  [default: jpg]
+  -out_ext output extension (jpg, png, gif) [default: png]
+  -leave   whether to leave input           [default: fasle]
+```
+
+## Development
+
+### Build
+
+```
+make build
+```
+
+### Test
+
+```
+make test
+```
+
+### Clean
+
+```
+make clean
+```
