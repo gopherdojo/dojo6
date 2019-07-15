@@ -5,6 +5,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/dojo6/kadai1/annkara/pkg/image"
 )
 
 const (
@@ -14,6 +19,49 @@ const (
 
 type cli struct {
 	outStream, errStream io.Writer
+}
+
+func (c *cli) walk(root, target, format string) error {
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return filepath.SkipDir
+		}
+
+		n := info.Name()
+		if strings.HasSuffix(n, target) {
+			origin, err := os.Open(n)
+			if err != nil {
+				return err
+			}
+			defer origin.Close()
+
+			// 拡張子を含まない出力用ファイル名
+			n := filepath.Base(n[:len(n)-len(filepath.Ext(n))])
+			out, err := os.Create(n + "." + format)
+			if err != nil {
+				return err
+			}
+
+			err = image.Convert(origin, out, format)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *cli) run(args []string) int {
