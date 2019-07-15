@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -15,29 +16,36 @@ type ImageFile struct {
 }
 
 // NewImageFile is a constructor of ImageFile
-func NewImageFile(path string) *ImageFile {
+func NewImageFile(path string) (*ImageFile, error) {
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return nil, err
+	}
+
 	file, err := os.Open(path)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	defer file.Close()
 
-	var (
-		image image.Image
-	)
+	var image image.Image
 	switch filepath.Ext(path) {
 	case ".jpg", ".jpeg":
 		image, err = jpeg.Decode(file)
 	case ".png":
 		image, err = png.Decode(file)
 	default:
-		return nil
+		// try to decode as jpeg
+		image, err = jpeg.Decode(file)
+	}
+	if err != nil {
+		return nil, err
 	}
 
 	return &ImageFile{
 		image: &image,
-		path:  path,
-	}
+		path:  absPath,
+	}, nil
 }
 
 // AbsPath returns the absolute path of the input file
@@ -47,8 +55,14 @@ func (img *ImageFile) AbsPath() string {
 
 // SaveAs oututs a file to the specified path after convering to the specified exteinsion.
 func (img *ImageFile) SaveAs(path string) error {
+	err := os.MkdirAll(filepath.Dir(path), 0777)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
 	file, err := os.Create(path)
 	if err != nil {
+		log.Println(err)
 		return nil
 	}
 	ext := filepath.Ext(path)
