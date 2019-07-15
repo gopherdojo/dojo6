@@ -66,8 +66,8 @@ func (c *cli) run(args []string) int {
 	log.SetOutput(c.outStream)
 
 	var (
+		before string
 		after  string
-		target string
 		debug  bool
 	)
 
@@ -76,10 +76,11 @@ func (c *cli) run(args []string) int {
 	flags.Usage = func() {
 		fmt.Fprint(c.errStream, helpText)
 	}
-	flags.StringVar(&after, "a", "jpg", "変換対象の画像形式を指定")
-	flags.StringVar(&after, "after", "jpg", "変換対象の画像形式を指定")
-	flags.StringVar(&target, "t", "png", "変換後の画像形式を指定")
-	flags.StringVar(&target, "target", "png", "変換後の画像形式を指定")
+
+	flags.StringVar(&before, "b", "jpg", "変換後の画像形式を指定")
+	flags.StringVar(&before, "before", "jpg", "変換後の画像形式を指定")
+	flags.StringVar(&after, "a", "png", "変換対象の画像形式を指定")
+	flags.StringVar(&after, "after", "png", "変換対象の画像形式を指定")
 	flags.BoolVar(&debug, "debug", false, "")
 
 	if err := flags.Parse(args[1:]); err != nil {
@@ -90,7 +91,7 @@ func (c *cli) run(args []string) int {
 	}
 
 	for _, v := range flags.Args() {
-		err := c.walk(v, target, after)
+		err := c.walk(v, before, after)
 		if err != nil {
 			if debug {
 				log.Printf("failed: %+v\n", err)
@@ -111,6 +112,6 @@ JPEGまたはPNG形式をサポートします。
 
 Options:
   -a, -after                     変換後の画像形式を指定
+  -b, -before                    変換前の画像形式を指定
   -h, -help                      ヘルプを表示
-  -t, -target                    変換対象の画像形式を指定
 `
