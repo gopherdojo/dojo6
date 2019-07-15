@@ -29,10 +29,6 @@ func (c *cli) walk(root, target, format string) error {
 			return err
 		}
 
-		if info.IsDir() {
-			return filepath.SkipDir
-		}
-
 		n := info.Name()
 		if strings.HasSuffix(n, target) {
 			origin, err := os.Open(n)
@@ -85,6 +81,14 @@ func (c *cli) run(args []string) int {
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return exitCodeErr
+	}
+
+	for _, v := range flags.Args() {
+		r, err := filepath.Abs(v)
+		err = c.walk(r, target, after)
+		if err != nil {
+			return exitCodeErr
+		}
 	}
 
 	return exitCodeOK
