@@ -1,23 +1,22 @@
-package convdir_test
+package convdir
 
 import (
 	"os"
 	"reflect"
 	"testing"
 
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/convdir"
 	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/imgconv"
 )
 
 func TestConverterWithDir_Convert(t *testing.T) {
-	cd := convdir.ConverterWithDir{
+	cd := ConverterWithDir{
 		Dir:             "../../testdata",
 		InputExtension:  imgconv.JPEG,
 		OutputExtension: imgconv.PNG,
 		LeaveInput:      true,
 	}
 	got := cd.Convert()
-	want := []convdir.ConvertedResult{
+	want := []ConvertedResult{
 		{OutputPath: "../../testdata/sample.png"},
 		{OutputPath: "../../testdata/testdir1/testdir2/sample.png"},
 	}

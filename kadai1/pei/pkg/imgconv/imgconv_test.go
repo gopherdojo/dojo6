@@ -1,10 +1,8 @@
-package imgconv_test
+package imgconv
 
 import (
 	"os"
 	"testing"
-
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/imgconv"
 )
 
 func TestImgConverter_Convert(t *testing.T) {
@@ -21,16 +19,16 @@ func TestImgConverter_Convert(t *testing.T) {
 	}()
 
 	var (
-		ic  imgconv.ImgConverter
+		ic  ImgConverter
 		err error
 	)
 
 	// jpg -> png
-	ic = imgconv.ImgConverter{
+	ic = ImgConverter{
 		InputPath:       jpgfile,
-		InputExtension:  imgconv.JPEG,
+		InputExtension:  JPEG,
 		OutputPath:      pngfile,
-		OutputExtension: imgconv.PNG,
+		OutputExtension: PNG,
 		LeaveInput:      true,
 	}
 	err = ic.Convert()
@@ -39,11 +37,11 @@ func TestImgConverter_Convert(t *testing.T) {
 	}
 
 	// png -> gif
-	ic = imgconv.ImgConverter{
+	ic = ImgConverter{
 		InputPath:       pngfile,
-		InputExtension:  imgconv.PNG,
+		InputExtension:  PNG,
 		OutputPath:      giffile,
-		OutputExtension: imgconv.GIF,
+		OutputExtension: GIF,
 		LeaveInput:      false,
 	}
 	err = ic.Convert()
