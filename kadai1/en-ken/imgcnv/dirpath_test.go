@@ -7,8 +7,8 @@ import (
 )
 
 func TestCanGetAllFileInfo(t *testing.T) {
-	dirPath, _ := NewDirPath("../testdata/")
-	actual, _ := dirPath.AllFilePaths("jpg")
+	dirPath := NewDirPath()
+	actual, _ := dirPath.AllFilePaths("../testdata/", "jpg")
 	expected := []string{"../testdata/lenna_color.jpg", "../testdata/lenna_gray.jpg", "../testdata/layer1/girl_color.jpg", "../testdata/layer1/girl_gray.jpg", "../testdata/layer1/layer2/Mandrill.jpg"}
 	for i := 0; i < len(expected); i++ {
 		expected[i], _ = filepath.Abs(expected[i])

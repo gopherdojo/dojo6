@@ -7,31 +7,28 @@ import (
 
 // DirPath expresses I/F to DirPathStruct
 type DirPath interface {
-	AllFilePaths(ext string) ([]string, error)
+	AllFilePaths(path string, ext string) ([]string, error)
 }
 
 // DirPathStruct expresses searcing dir
 type DirPathStruct struct {
-	path string
 }
 
 // NewDirPath is a constructor of DirPath
-func NewDirPath(dirPath string) (DirPath, error) {
-	absPath, err := filepath.Abs(dirPath)
-	if err != nil {
-		return nil, err
-	}
-	return &DirPathStruct{
-		path: absPath,
-	}, nil
+func NewDirPath() DirPath {
+	return &DirPathStruct{}
 }
 
 // AllFilePaths returns
 // the paths of the files in the specified directory
 // filtered by the specified extension.
-func (dirPath *DirPathStruct) AllFilePaths(ext string) ([]string, error) {
+func (dirPath *DirPathStruct) AllFilePaths(path string, ext string) ([]string, error) {
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return nil, err
+	}
 
-	return searchFiles(dirPath.path, ext)
+	return searchFiles(absPath, ext)
 }
 
 func searchFiles(dirPath string, ext string) ([]string, error) {

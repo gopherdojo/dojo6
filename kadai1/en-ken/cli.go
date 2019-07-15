@@ -43,7 +43,7 @@ func (cli *CLI) Execute(args []string) error {
 		outputDir = inputDir
 	}
 
-	paths, err := cli.dirPath.AllFilePaths(*inputExt)
+	paths, err := cli.dirPath.AllFilePaths(inputDir, *inputExt)
 	if err != nil {
 		return err
 	}

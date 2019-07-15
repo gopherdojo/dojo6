@@ -54,7 +54,7 @@ func TestCanExecuteWithSomeOptions(t *testing.T) {
 
 			mockDirPath.
 				EXPECT().
-				AllFilePaths(gomock.Eq(test.inputExt)).
+				AllFilePaths(gomock.Eq(inputAbsDir), gomock.Eq(test.inputExt)).
 				Return([]string{inputPath1, inputPath2}, nil)
 
 			mockImg := mock_imgcnv.NewMockImageFile(ctrl)

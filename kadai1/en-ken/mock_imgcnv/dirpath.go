@@ -33,16 +33,16 @@ func (m *MockDirPath) EXPECT() *MockDirPathMockRecorder {
 }
 
 // AllFilePaths mocks base method
-func (m *MockDirPath) AllFilePaths(ext string) ([]string, error) {
+func (m *MockDirPath) AllFilePaths(path, ext string) ([]string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllFilePaths", ext)
+	ret := m.ctrl.Call(m, "AllFilePaths", path, ext)
 	ret0, _ := ret[0].([]string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AllFilePaths indicates an expected call of AllFilePaths
-func (mr *MockDirPathMockRecorder) AllFilePaths(ext interface{}) *gomock.Call {
+func (mr *MockDirPathMockRecorder) AllFilePaths(path, ext interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllFilePaths", reflect.TypeOf((*MockDirPath)(nil).AllFilePaths), ext)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllFilePaths", reflect.TypeOf((*MockDirPath)(nil).AllFilePaths), path, ext)
 }
