@@ -21,7 +21,7 @@ type cli struct {
 	outStream, errStream io.Writer
 }
 
-func (c *cli) walk(root, target, format string) error {
+func (c *cli) walk(root, before, after string) error {
 
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 
@@ -30,7 +30,7 @@ func (c *cli) walk(root, target, format string) error {
 		}
 
 		n := info.Name()
-		if strings.HasSuffix(n, target) {
+		if strings.HasSuffix(n, before) {
 			origin, err := os.Open(path)
 			if err != nil {
 				return err
@@ -40,12 +40,12 @@ func (c *cli) walk(root, target, format string) error {
 			// 拡張子を含まない出力用ファイル名
 			n := filepath.Base(n[:len(n)-len(filepath.Ext(n))])
 			dir := filepath.Dir(path)
-			out, err := os.Create(filepath.Join(dir, n+"."+format))
+			out, err := os.Create(filepath.Join(dir, n+"."+after))
 			if err != nil {
 				return err
 			}
 
-			err = image.Convert(origin, out, format)
+			err = image.Convert(origin, out, after)
 			if err != nil {
 				return err
 			}
