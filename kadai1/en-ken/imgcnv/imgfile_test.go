@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 	os.RemoveAll(outputDir)
 }
 
-func TestCanConstructImageFile(t *testing.T) {
+func TestConstructImageFileSuccess(t *testing.T) {
 	paths := []string{"layer1/layer2/Mandrill.jpg", "layer1/layer2/Mandrill.png"}
 
 	for _, path := range paths {
@@ -30,7 +30,7 @@ func TestCanConstructImageFile(t *testing.T) {
 	}
 }
 
-func TestCannotConstructImageFileWithInvalidPath(t *testing.T) {
+func TestConstructImageFileFailureWithInvalidPath(t *testing.T) {
 	inputPath := filepath.Join(inputDir, "layer1/layer2/layer3/foo.jpg")
 	_, err := NewImageFile(inputPath)
 	if err == nil {
@@ -38,7 +38,7 @@ func TestCannotConstructImageFileWithInvalidPath(t *testing.T) {
 	}
 }
 
-func TestCannotConstructImageFileWithOtherFormatFile(t *testing.T) {
+func TestConstructImageFileFailureWithOtherFormatFile(t *testing.T) {
 	inputPath := filepath.Join(inputDir, "lenna_color.gif")
 	_, err := NewImageFile(inputPath)
 	if err == nil {
@@ -46,7 +46,7 @@ func TestCannotConstructImageFileWithOtherFormatFile(t *testing.T) {
 	}
 }
 
-func TestCanGetAbsPathOfImageFile(t *testing.T) {
+func TestAbsPathSuccess(t *testing.T) {
 	filePath := "layer1/layer2/Mandrill.jpg"
 	inputPath := filepath.Join(inputDir, filePath)
 	image, _ := NewImageFile(inputPath)
@@ -61,7 +61,7 @@ func TestCanGetAbsPathOfImageFile(t *testing.T) {
 	}
 }
 
-func TestCanSaveAsExpectedFileFormat(t *testing.T) {
+func TestSaveAsSuccess(t *testing.T) {
 	tests := []struct {
 		fileName    string
 		ext         string

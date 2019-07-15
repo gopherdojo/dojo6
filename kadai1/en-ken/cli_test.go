@@ -9,7 +9,7 @@ import (
 	"github.com/gopherdojo/dojo6/kadai1/en-ken/mock_imgcnv"
 )
 
-func TestCanExecuteWithSomeOptions(t *testing.T) {
+func TestExecuteSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
