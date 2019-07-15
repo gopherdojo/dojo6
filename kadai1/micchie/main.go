@@ -18,9 +18,9 @@ var (
 )
 
 func init() {
-	flag.StringVar(&dir, "d", "", "path of images to convert.[required]")
-	flag.StringVar(&beforeFormat, "before", "jpg", "image format before conversion. default \"jpg\"[optional]")
-	flag.StringVar(&afterFormat, "after", "png", "image format after conversion. default \"png\"[optional]")
+	flag.StringVar(&dir, "d", "", "path of images to convert [required]")
+	flag.StringVar(&beforeFormat, "before", "jpg", "image format before conversion")
+	flag.StringVar(&afterFormat, "after", "png", "image format after conversion")
 	flag.Parse()
 }
 
