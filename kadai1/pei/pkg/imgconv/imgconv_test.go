@@ -31,6 +31,7 @@ func TestImgConverter_Convert(t *testing.T) {
 		InputExtension: imgconv.JPEG,
 		OutputPath: pngfile,
 		OutputExtension: imgconv.PNG,
+		LeaveInput: true,
 	}
 	err = ic.Convert()
 	if err != nil {
@@ -43,6 +44,7 @@ func TestImgConverter_Convert(t *testing.T) {
 		InputExtension: imgconv.PNG,
 		OutputPath: giffile,
 		OutputExtension: imgconv.GIF,
+		LeaveInput: false,
 	}
 	err = ic.Convert()
 	if err != nil {

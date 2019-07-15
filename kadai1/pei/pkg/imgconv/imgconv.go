@@ -17,6 +17,7 @@ type ImgConverter struct {
 	InputExtension ImgExtension
 	OutputPath string
 	OutputExtension ImgExtension
+	LeaveInput bool
 }
 
 // Convert image file.
@@ -41,6 +42,10 @@ func (ic *ImgConverter) Convert() error {
 	err = encodeImg(outFile, ic.OutputExtension, &inImg)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if !ic.LeaveInput {
+		os.Remove(ic.InputPath)
 	}
 
 	return nil
