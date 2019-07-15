@@ -12,10 +12,10 @@ import (
 
 // ImgConverter With Directory struct has target directory and 2 extention and option.
 type ConverterWithDir struct {
-	Dir string
-	InputExtension imgconv.ImgExtension
+	Dir             string
+	InputExtension  imgconv.ImgExtension
 	OutputExtension imgconv.ImgExtension
-	LeaveInput bool
+	LeaveInput      bool
 }
 
 // Result struct has output image path.
@@ -36,11 +36,11 @@ func (cd ConverterWithDir) Convert() (results []ConvertedResult) {
 		outputPath := fmt.Sprintf("%s.%s", strings.TrimSuffix(inputPath, filepath.Ext(inputPath)), cd.OutputExtension)
 
 		ic := imgconv.ImgConverter{
-			InputPath: inputPath,
-			InputExtension: cd.InputExtension,
-			OutputPath: outputPath,
+			InputPath:       inputPath,
+			InputExtension:  cd.InputExtension,
+			OutputPath:      outputPath,
 			OutputExtension: cd.OutputExtension,
-			LeaveInput: cd.LeaveInput,
+			LeaveInput:      cd.LeaveInput,
 		}
 		err = ic.Convert()
 		if err != nil {

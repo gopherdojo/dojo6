@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	usageInExt = `input extension (jpg, png, gif)`
+	usageInExt  = `input extension (jpg, png, gif)`
 	usageOutExt = `output extension (jpg, png, gif)`
-    usageLeave = `Whether to leave input`
+	usageLeave  = `whether to leave input`
 )
 
 func main() {
 	var (
-		inputExtension = flag.String("in_ext", "jpg", usageInExt)
+		inputExtension  = flag.String("in_ext", "jpg", usageInExt)
 		outputExtension = flag.String("out_ext", "png", usageOutExt)
-		leaveInput = flag.Bool("leave", false, usageLeave)
+		leaveInput      = flag.Bool("leave", false, usageLeave)
 	)
 	flag.Parse()
 	args := flag.Args()
@@ -28,10 +28,10 @@ func main() {
 	}
 
 	cd := convdir.ConverterWithDir{
-		Dir: args[0],
-		InputExtension: imgconv.ParseImgExtension(*inputExtension),
+		Dir:             args[0],
+		InputExtension:  imgconv.ParseImgExtension(*inputExtension),
 		OutputExtension: imgconv.ParseImgExtension(*outputExtension),
-		LeaveInput: *leaveInput,
+		LeaveInput:      *leaveInput,
 	}
 	cd.Convert()
 }

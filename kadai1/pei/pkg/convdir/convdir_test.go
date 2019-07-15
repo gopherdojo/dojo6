@@ -11,10 +11,10 @@ import (
 
 func TestConverterWithDir_Convert(t *testing.T) {
 	cd := convdir.ConverterWithDir{
-		Dir: "../../testdata",
-		InputExtension: imgconv.JPEG,
+		Dir:             "../../testdata",
+		InputExtension:  imgconv.JPEG,
 		OutputExtension: imgconv.PNG,
-		LeaveInput: true,
+		LeaveInput:      true,
 	}
 	got := cd.Convert()
 	want := []convdir.ConvertedResult{

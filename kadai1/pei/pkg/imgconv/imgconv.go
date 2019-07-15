@@ -12,12 +12,12 @@ import (
 
 // ImgConverter struct has 2 paths and 2 extensions for input and output.
 type ImgConverter struct {
-	// 
-	InputPath string
-	InputExtension ImgExtension
-	OutputPath string
+	//
+	InputPath       string
+	InputExtension  ImgExtension
+	OutputPath      string
 	OutputExtension ImgExtension
-	LeaveInput bool
+	LeaveInput      bool
 }
 
 // Convert image file.

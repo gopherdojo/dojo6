@@ -21,17 +21,17 @@ func TestImgConverter_Convert(t *testing.T) {
 	}()
 
 	var (
-		ic imgconv.ImgConverter
+		ic  imgconv.ImgConverter
 		err error
 	)
 
 	// jpg -> png
 	ic = imgconv.ImgConverter{
-		InputPath: jpgfile,
-		InputExtension: imgconv.JPEG,
-		OutputPath: pngfile,
+		InputPath:       jpgfile,
+		InputExtension:  imgconv.JPEG,
+		OutputPath:      pngfile,
 		OutputExtension: imgconv.PNG,
-		LeaveInput: true,
+		LeaveInput:      true,
 	}
 	err = ic.Convert()
 	if err != nil {
@@ -40,11 +40,11 @@ func TestImgConverter_Convert(t *testing.T) {
 
 	// png -> gif
 	ic = imgconv.ImgConverter{
-		InputPath: pngfile,
-		InputExtension: imgconv.PNG,
-		OutputPath: giffile,
+		InputPath:       pngfile,
+		InputExtension:  imgconv.PNG,
+		OutputPath:      giffile,
 		OutputExtension: imgconv.GIF,
-		LeaveInput: false,
+		LeaveInput:      false,
 	}
 	err = ic.Convert()
 	if err != nil {
