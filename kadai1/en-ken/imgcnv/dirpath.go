@@ -10,7 +10,7 @@ type DirPath interface {
 	AllFilePaths(path string, ext string) ([]string, error)
 }
 
-// DirPathStruct expresses searcing dir
+// DirPathStruct expresses searching dir
 type DirPathStruct struct {
 }
 
