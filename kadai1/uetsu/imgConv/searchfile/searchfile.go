@@ -18,6 +18,9 @@ func RecursionFile(dirPath string) (filePathList []string) {
 			filePathList = append(filePathList, RecursionFile(filepath.Join(dirPath, file.Name()))...)
 			continue
 		}
+		if filepath.Ext(file.Name()) != ".jpg" {
+			continue
+		}
 		filePathList = append(filePathList, filepath.Join(dirPath, file.Name()))
 	}
 

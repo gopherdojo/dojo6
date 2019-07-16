@@ -12,11 +12,16 @@ func main() {
 	flag.Parse()
 	args := flag.Args()
 
+	inputExt := convert.InputExt{
+		"jpg",
+		"png",
+	}
+
 	for _, dirPath := range args {
 		filePathList := searchfile.RecursionFile(dirPath)
 
 		for _, filePath := range filePathList {
-			convertedFilePath, err := convert.ImgConv(filePath)
+			convertedFilePath, err := convert.ImgConv(filePath, inputExt)
 			if err != nil {
 				fmt.Printf("%s convert fail\n", filePath)
 				continue
