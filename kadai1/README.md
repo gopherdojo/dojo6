@@ -15,6 +15,10 @@
 - ユーザ定義型を使ってみる
 - GoDocを生成してみる
 
+## How to
 
-
-
+```
+export GOBIN=`pwd`/_bin
+$ go install github.com/gopherdojo/dojo6/kadai1/cmd/j2p
+$ _bin/cmd
+```

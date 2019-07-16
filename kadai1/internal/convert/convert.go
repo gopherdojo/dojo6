@@ -1,3 +1,6 @@
+/*
+JPEG形式の画像をPNG形式に変換するパッケージです。
+*/
 package convert
 
 import (
@@ -6,22 +9,17 @@ import (
 	_ "image/jpeg"
 	"image/png"
 	"os"
-	"path/filepath"
 )
 
-// Information
-type Info struct {
-}
-
-// ファイル名から拡張子を取ったファイル名を返します
-func getFileNameWithoutExt(path string) string {
-	// Fixed with a nice method given by mattn-san
-	return filepath.Base(path[:len(path)-len(filepath.Ext(path))])
+// 変換する前と後のファイル名を持った構造体です。
+type ConvertFile struct {
+	Old string // 変換前のファイル名
+	New string // 変換後のファイル名
 }
 
 // ConvertToPng は ファイルのパスを受け取り、JPGならPNG形式に画像を変換します
-func ConvertToPng(path string) error {
-	file, err := os.Open(path)
+func (cnv *ConvertFile) ConvertToPng() error {
+	file, err := os.Open(cnv.Old)
 	if err != nil {
 		fmt.Printf("Can not open : %v ", err)
 		return err
@@ -34,12 +32,10 @@ func ConvertToPng(path string) error {
 		return err
 	}
 	if format != "jpeg" {
-		fmt.Println("jpeg じゃないよ")
 		return nil
 	}
 
-	filename := getFileNameWithoutExt(path) + ".png"
-	out, err := os.Create(filename)
+	out, err := os.Create(cnv.New)
 	defer out.Close()
 
 	err = png.Encode(out, img)
