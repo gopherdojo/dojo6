@@ -36,8 +36,6 @@ func (c *Converter) Convert(path string) error {
 	if err != nil {
 		return err
 	}
-	// 成功メッセージの表示
-	fmt.Printf("%s converted to %s image\n", path, c.ExtCnv)
 	return nil
 
 }
