@@ -24,7 +24,7 @@ type Converter struct {
 }
 
 // Converは、受け取ったファイルパスの画像ファイルを指定した形式に変換します
-func (c Converter) Convert(path string) error {
+func (c *Converter) Convert(path string) error {
 	// 変換前のファイルのデコード
 	data, err := c.decode(path)
 	if err != nil {
@@ -43,7 +43,7 @@ func (c Converter) Convert(path string) error {
 }
 
 // decodeは指定したファイルパスのファイルの読み取り、デコードを行います
-func (c Converter) decode(path string) (image.Image, error) {
+func (c *Converter) decode(path string) (image.Image, error) {
 	// ファイルの読み取り
 	file, err := os.Open(path)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c Converter) decode(path string) (image.Image, error) {
 }
 
 // encodeは、image.Image型のデータを、特定の形式にエンコードし、指定したパスにファイルを作成します。
-func (c Converter) encode(filepath string, data image.Image) error {
+func (c *Converter) encode(filepath string, data image.Image) error {
 	// 書き込み先の指定
 	writer, err := os.Create(strings.TrimSuffix(filepath, path.Ext(filepath)) + "." + c.ExtCnv)
 	if err != nil {
