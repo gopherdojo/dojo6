@@ -49,6 +49,7 @@ func (c *Converter) decode(path string) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	// ファイル形式に応じたデコード処理
 	switch c.ExtSrc {
