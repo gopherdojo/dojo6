@@ -10,7 +10,8 @@
 
 ## 使い方
 ```
-go run main.go -s jpg -d png images
+go build -o converter
+./converter -s jpg -d png <path/to/directry>
 ```
 
 ## 気になっている点
