@@ -19,23 +19,6 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-// NewImgのテストです。正しいConverter構造体を返却することを確認します。
-func TestNewImg(t *testing.T) {
-	extSrc := "jpg"
-	extCnv := "png"
-	// 関数の呼び出し
-	result := NewConverter(extSrc, extCnv)
-	// 期待する戻り値
-	expect := &Converter{
-		extSrc: "jpg",
-		extCnv: "png",
-	}
-	// 呼び出し結果と期待値の比較
-	if *result != *expect {
-		t.Error("NewConverterの戻り値が正しくありません")
-	}
-}
-
 // decodeのテストです。
 func TestDecode(t *testing.T) {
 	// 引数のファイルが存在しない場合のテストケース
