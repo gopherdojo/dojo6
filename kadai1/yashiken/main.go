@@ -29,7 +29,11 @@ func main() {
 	}
 
 	// 変換方法を定義する構造体の生成
-	c := convert.NewConverter(*extSrc, *extCnv)
+	c := &convert.Converter{
+		ExtSrc: *extSrc,
+		ExtCnv: *extCnv,
+	}
+
 	// 画像の変換を実行
 	for _, filepath := range filepaths {
 
