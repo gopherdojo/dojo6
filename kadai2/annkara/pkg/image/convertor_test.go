@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var path = filepath.Join("..", "..", "test")
+var path = filepath.Join("testdata")
 
 func TestConvertSuccess(t *testing.T) {
 	in, err := os.Open(filepath.Join(path, "test.jpg"))
