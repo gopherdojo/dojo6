@@ -6,9 +6,10 @@ import (
 	"testing"
 )
 
-var path = filepath.Join("testdata")
+var path = "testdata"
 
 func TestConvertSuccess(t *testing.T) {
+
 	in, err := os.Open(filepath.Join(path, "test.jpg"))
 	if err != nil {
 		t.Fatalf("failed test %#v", err)
