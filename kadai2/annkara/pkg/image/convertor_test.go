@@ -9,11 +9,11 @@ import (
 var directory = "testdata"
 
 type testcase struct {
-	desc     string
-	origin   string
-	target   string
-	format   string
-	expected string
+	desc   string
+	origin string
+	target string
+	format string
+	err    bool
 }
 
 func TestConvert(t *testing.T) {
@@ -24,16 +24,19 @@ func TestConvert(t *testing.T) {
 			origin: filepath.Join(directory, "test.jpg"),
 			target: filepath.Join(directory, "test2.png"),
 			format: "png",
+			err:    false,
 		}, {
 			desc:   "png to jpg",
 			origin: filepath.Join(directory, "test.png"),
 			target: filepath.Join(directory, "test2.jpg"),
 			format: "jpg",
+			err:    false,
 		}, {
 			desc:   "Unknow format",
 			origin: filepath.Join(directory, "test.png"),
 			target: filepath.Join(directory, "test2.diff"),
-			format: "diff",
+			format: "gif",
+			err:    true,
 		},
 	}
 
@@ -53,11 +56,12 @@ func testConvert(t *testing.T, tc testcase) {
 	if err != nil {
 		t.Fatalf("failed test %s: %#v", tc.desc, err)
 	}
+	// テスト用に生成されたファイルを削除
 	defer os.Remove(tc.target)
 	defer out.Close()
 
 	err = Convert(in, out, tc.format)
-	if err != nil {
+	if !((err != nil) == tc.err) {
 		t.Fatalf("failed test %s: %#v", tc.desc, err)
 	}
 
