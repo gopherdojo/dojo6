@@ -1,4 +1,4 @@
-// Package dir provides directory walker function.
+// Package dir provides directory walk function.
 package dir
 
 import (
@@ -9,7 +9,9 @@ import (
 	"github.com/dojo6/kadai2/annkara/pkg/image"
 )
 
-// Walk walks the file tree rooted at root.
+// Walk only calls the filepath.Walk fuction and internally calls image.Convert function.
+// The root parameter is the target root directory, the before is the file extension before converting image,
+// the after is after coverting image.
 func Walk(root, before, after string) error {
 
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
