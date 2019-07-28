@@ -5,11 +5,8 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
-	"path/filepath"
-	"strings"
 
-	"github.com/dojo6/kadai1/annkara/pkg/image"
+	"github.com/dojo6/kadai2/annkara/pkg/dir"
 )
 
 const (
@@ -19,53 +16,6 @@ const (
 
 type cli struct {
 	outStream, errStream io.Writer
-}
-
-func (c *cli) walk(root, before, after string) error {
-
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-
-		if err != nil {
-			return err
-		}
-
-		n := info.Name()
-		if strings.HasSuffix(n, before) {
-			origin, err := os.Open(path)
-			if err != nil {
-				return err
-			}
-			defer origin.Close()
-
-			// 拡張子を含まない出力用ファイル名
-			n := filepath.Base(n[:len(n)-len(filepath.Ext(n))])
-			dir := filepath.Dir(path)
-			out, err := os.Create(filepath.Join(dir, n+"."+after))
-			if err != nil {
-				return err
-			}
-
-			err = image.Convert(origin, out, after)
-			if err != nil {
-				// 変換処理に失敗した場合、不要なファイルが作成されてしまうため、削除する
-				// ファイルを閉じた後でないと、Windowsの場合削除できないのでここでCloseする
-				out.Close()
-				e := os.Remove(filepath.Join(dir, n+"."+after))
-				if e != nil {
-					return e
-				}
-				return err
-			}
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (c *cli) run(args []string) int {
@@ -98,7 +48,7 @@ func (c *cli) run(args []string) int {
 	}
 
 	for _, v := range flags.Args() {
-		err := c.walk(v, before, after)
+		err := dir.Walk(v, before, after)
 		if err != nil {
 			if debug {
 				log.Printf("failed: %+v\n", err)
