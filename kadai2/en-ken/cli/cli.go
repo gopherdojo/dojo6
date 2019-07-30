@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"flag"
@@ -10,8 +10,8 @@ import (
 
 // CLI is for DI
 type CLI struct {
-	dirPath      imgcnv.DirPath
-	imageFactory imgcnv.ImageFileFactory
+	DirPath      imgcnv.DirPath
+	ImageFactory imgcnv.ImageFileFactory
 }
 
 // Execute executes this app according to options
@@ -43,13 +43,13 @@ func (cli *CLI) Execute(args []string) error {
 		outputDir = inputDir
 	}
 
-	paths, err := cli.dirPath.AllFilePaths(inputDir, *inputExt)
+	paths, err := cli.DirPath.AllFilePaths(inputDir, *inputExt)
 	if err != nil {
 		return err
 	}
 
 	for _, path := range paths {
-		img, err := cli.imageFactory.Create(path)
+		img, err := cli.ImageFactory.Create(path)
 		if err != nil {
 			return err
 		}
