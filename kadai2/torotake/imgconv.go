@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gopherdojo/dojo6/kadai1/torotake/convert"
+	"github.com/gopherdojo/dojo6/kadai2/torotake/convert"
 )
 
 var (
