@@ -35,7 +35,7 @@ func searchFiles(dirPath string, ext string) ([]string, error) {
 			result = append(result, paths...)
 		} else {
 			// ignore error
-			isMatch, _ := filepath.Match("*"+ext, file.Name())
+			isMatch, _ := filepath.Match("*."+ext, file.Name())
 			if isMatch {
 				result = append(result, path)
 			}
