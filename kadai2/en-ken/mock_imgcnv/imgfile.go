@@ -6,7 +6,7 @@ package mock_imgcnv
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	imgcnv "github.com/gopherdojo/dojo6/kadai1/en-ken/imgcnv"
+	imgcnv "github.com/gopherdojo/dojo6/kadai2/en-ken/imgcnv"
 	reflect "reflect"
 )
 

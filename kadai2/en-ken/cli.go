@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gopherdojo/dojo6/kadai1/en-ken/imgcnv"
+	"github.com/gopherdojo/dojo6/kadai2/en-ken/imgcnv"
 )
 
 // CLI is for DI

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/gopherdojo/dojo6/kadai1/en-ken/mock_imgcnv"
+	"github.com/gopherdojo/dojo6/kadai2/en-ken/mock_imgcnv"
 )
 
 func TestExecuteSuccess(t *testing.T) {
