@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/gopherdojo/dojo6/kadai2/en-ken/cli"
@@ -13,5 +14,8 @@ func main() {
 		NewImageFIle: func(path string) (imgcnv.ImageFile, error) { return imgcnv.NewImageFile(path) },
 	}
 
-	cli.Execute(os.Args)
+	err := cli.Execute(os.Args)
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
 }
