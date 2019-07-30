@@ -22,24 +22,8 @@ type ImageFileStruct struct {
 	ImageFile
 }
 
-// ImageFileFactory is I/F of ImageFileFactoryStruct
-type ImageFileFactory interface {
-	Create(path string) (ImageFile, error)
-}
-
-// ImageFileFactoryStruct is for DI
-type ImageFileFactoryStruct struct {
-}
-
-// NewImageFileFactory is a constructor of NewImageFileFactory
-func NewImageFileFactory() ImageFileFactory {
-	return &ImageFileFactoryStruct{}
-}
-
-// Create generates ImageFile
-func (factory *ImageFileFactoryStruct) Create(path string) (ImageFile, error) {
-	return NewImageFile(path)
-}
+// INewImageFile is I/F to NewImageFile
+type INewImageFile func(path string) (ImageFile, error)
 
 // NewImageFile is a constructor of ImageFile
 func NewImageFile(path string) (ImageFile, error) {

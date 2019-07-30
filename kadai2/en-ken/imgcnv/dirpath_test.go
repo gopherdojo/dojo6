@@ -7,8 +7,7 @@ import (
 )
 
 func TestAllFilePathsSuccess(t *testing.T) {
-	dirPath := NewDirPath()
-	actual, _ := dirPath.AllFilePaths("../testdata/", "jpg")
+	actual, _ := AllFilePaths("../testdata/", "jpg")
 	expected := []string{
 		"../testdata/lenna_color.jpg",
 		"../testdata/lenna_gray.jpg",
@@ -26,8 +25,7 @@ func TestAllFilePathsSuccess(t *testing.T) {
 }
 
 func TestAllFilePathsFailure(t *testing.T) {
-	dirPath := NewDirPath()
-	_, err := dirPath.AllFilePaths("../foo/", "jpg")
+	_, err := AllFilePaths("../foo/", "jpg")
 
 	if err == nil {
 		t.Errorf("directory does not exist")

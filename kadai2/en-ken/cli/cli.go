@@ -10,8 +10,8 @@ import (
 
 // CLI is for DI
 type CLI struct {
-	DirPath      imgcnv.DirPath
-	ImageFactory imgcnv.ImageFileFactory
+	AllFilePaths imgcnv.IAllFilePaths
+	NewImageFIle imgcnv.INewImageFile
 }
 
 // Execute executes this app according to options
@@ -43,13 +43,13 @@ func (cli *CLI) Execute(args []string) error {
 		outputDir = inputDir
 	}
 
-	paths, err := cli.DirPath.AllFilePaths(inputDir, *inputExt)
+	paths, err := cli.AllFilePaths(inputDir, *inputExt)
 	if err != nil {
 		return err
 	}
 
 	for _, path := range paths {
-		img, err := cli.ImageFactory.Create(path)
+		img, err := cli.NewImageFIle(path)
 		if err != nil {
 			return err
 		}

@@ -8,11 +8,9 @@ import (
 )
 
 func main() {
-	dirPath := imgcnv.NewDirPath()
-	factory := imgcnv.NewImageFileFactory()
 	cli := &cli.CLI{
-		DirPath:      dirPath,
-		ImageFactory: factory,
+		AllFilePaths: func(path string, ext string) ([]string, error) { return imgcnv.AllFilePaths(path, ext) },
+		NewImageFIle: func(path string) (imgcnv.ImageFile, error) { return imgcnv.NewImageFile(path) },
 	}
 
 	cli.Execute(os.Args)
