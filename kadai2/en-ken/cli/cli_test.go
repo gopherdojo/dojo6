@@ -5,14 +5,27 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/gopherdojo/dojo6/kadai2/en-ken/mock_imgcnv"
+	"github.com/gopherdojo/dojo6/kadai2/en-ken/imgcnv"
 )
 
-func TestExecuteSuccess(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+type ImageFileMock struct {
+	t          *testing.T
+	inputPath  string
+	outputPath string
+}
 
+func (mock *ImageFileMock) AbsPath() string {
+	return mock.inputPath
+}
+
+func (mock *ImageFileMock) SaveAs(path string) error {
+	if path != mock.outputPath {
+		mock.t.Errorf("SaveAs was not called correctly:\nactual: %v\nexpected: %v", path, mock.outputPath)
+	}
+	return nil
+}
+
+func TestExecuteSuccess(t *testing.T) {
 	tests := []struct {
 		argString string
 		inputDir  string
@@ -21,24 +34,24 @@ func TestExecuteSuccess(t *testing.T) {
 		outputExt string
 	}{
 		{
-			argString: "./kadai1 ./testdata",
-			inputDir:  "./testdata", inputExt: ".jpg",
-			outputDir: "./testdata", outputExt: ".png",
+			argString: "./kadai1 ./testdata ./out",
+			inputDir:  "./testdata", inputExt: "jpg",
+			outputDir: "./out", outputExt: "png",
 		},
 		{
-			argString: "./kadai1 ./testdata -input-ext .png",
-			inputDir:  "./testdata", inputExt: ".png",
-			outputDir: "./testdata", outputExt: ".png",
+			argString: "./kadai1 -in png ./testdata ./out",
+			inputDir:  "./testdata", inputExt: "png",
+			outputDir: "./out", outputExt: "png",
 		},
 		{
-			argString: "./kadai1 ./testdata -input-ext .png -output-ext .jpg",
-			inputDir:  "./testdata", inputExt: ".png",
-			outputDir: "./testdata", outputExt: ".jpg",
+			argString: "./kadai1 -out jpg ./testdata ./out",
+			inputDir:  "./testdata", inputExt: "jpg",
+			outputDir: "./out", outputExt: "jpg",
 		},
 		{
-			argString: "./kadai1 ./testdata -output-dir ./out",
-			inputDir:  "./testdata", inputExt: ".jpg",
-			outputDir: "./out", outputExt: ".png",
+			argString: "./kadai1 -in png -out jpg ./testdata ./out",
+			inputDir:  "./testdata", inputExt: "png",
+			outputDir: "./out", outputExt: "jpg",
 		},
 	}
 
@@ -46,50 +59,41 @@ func TestExecuteSuccess(t *testing.T) {
 		testName := "input: " + test.argString
 		t.Run(testName, func(t *testing.T) {
 
-			mockDirPath := mock_imgcnv.NewMockDirPath(ctrl)
-
 			inputAbsDir, _ := filepath.Abs(test.inputDir)
 			inputPath1 := inputAbsDir + "/test1" + test.inputExt
 			inputPath2 := inputAbsDir + "/test2" + test.inputExt
+			outputPath1, _ := filepath.Abs(test.outputDir + "/test1" + test.outputExt)
+			outputPath2, _ := filepath.Abs(test.outputDir + "/test2" + test.outputExt)
 
-			mockDirPath.
-				EXPECT().
-				AllFilePaths(gomock.Eq(inputAbsDir), gomock.Eq(test.inputExt)).
-				Return([]string{inputPath1, inputPath2}, nil)
+			allFilePathsMock := func(path string, ext string) ([]string, error) {
+				if path == inputAbsDir && ext == test.inputExt {
+					return []string{inputPath1, inputPath2}, nil
+				}
+				t.Errorf("AllFilePaths was not called correctly: %v %v", path, ext)
+				return nil, nil
+			}
 
-			mockImg := mock_imgcnv.NewMockImageFile(ctrl)
-			gomock.InOrder(
-				mockImg.
-					EXPECT().
-					AbsPath().
-					Return(inputPath1),
-				mockImg.
-					EXPECT().
-					AbsPath().
-					Return(inputPath2),
-			)
-
-			outputPath1 := test.outputDir + "/test1" + test.outputExt
-			outputPath2 := test.outputDir + "/test2" + test.outputExt
-			gomock.InOrder(
-				mockImg.
-					EXPECT().
-					SaveAs(gomock.Eq(outputPath1)),
-				mockImg.
-					EXPECT().
-					SaveAs(gomock.Eq(outputPath2)),
-			)
-
-			mockImgFactory := mock_imgcnv.NewMockImageFileFactory(ctrl)
-			mockImgFactory.
-				EXPECT().
-				Create(gomock.Any()).
-				Return(mockImg, nil).
-				AnyTimes()
+			newImageFileMock := func(path string) (imgcnv.ImageFile, error) {
+				switch path {
+				case inputPath1:
+					return &ImageFileMock{
+						t:          t,
+						inputPath:  path,
+						outputPath: outputPath1,
+					}, nil
+				case inputPath2:
+					return &ImageFileMock{
+						t:          t,
+						inputPath:  path,
+						outputPath: outputPath2,
+					}, nil
+				}
+				return nil, nil
+			}
 
 			cli := &CLI{
-				dirPath:      mockDirPath,
-				imageFactory: mockImgFactory,
+				AllFilePaths: allFilePathsMock,
+				NewImageFIle: newImageFileMock,
 			}
 			cli.Execute(strings.Split(test.argString, " "))
 
