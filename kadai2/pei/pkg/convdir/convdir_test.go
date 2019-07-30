@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/imgconv"
+	"github.com/gopherdojo/dojo6/kadai2/pei/pkg/imgconv"
 )
 
 func TestConverterWithDir_Convert(t *testing.T) {

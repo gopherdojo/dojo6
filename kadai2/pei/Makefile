@@ -1,4 +1,4 @@
-ROOT=github.com/gopherdojo/dojo6/kadai1/pei
+ROOT=github.com/gopherdojo/dojo6/kadai2/pei
 BIN=bin/imgconv
 MAIN=cmd/cli.go
 TEST=...

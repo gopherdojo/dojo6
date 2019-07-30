@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/imgconv"
+	"github.com/gopherdojo/dojo6/kadai2/pei/pkg/imgconv"
 )
 
 // ImgConverter With Directory struct has target directory and 2 extention and option.

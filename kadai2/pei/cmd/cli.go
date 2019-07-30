@@ -4,8 +4,8 @@ import (
 	"flag"
 	"os"
 
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/convdir"
-	"github.com/gopherdojo/dojo6/kadai1/pei/pkg/imgconv"
+	"github.com/gopherdojo/dojo6/kadai2/pei/pkg/convdir"
+	"github.com/gopherdojo/dojo6/kadai2/pei/pkg/imgconv"
 )
 
 const (
