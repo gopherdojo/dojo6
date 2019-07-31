@@ -10,8 +10,8 @@ import (
 
 func main() {
 	cli := &cli.CLI{
-		AllFilePaths: func(path string, ext string) ([]string, error) { return imgcnv.AllFilePaths(path, ext) },
-		NewImageFIle: func(path string) (imgcnv.ImageFile, error) { return imgcnv.NewImageFile(path) },
+		AllFilePaths: imgcnv.IAllFilePaths(imgcnv.AllFilePaths),
+		NewImageFIle: imgcnv.INewImageFile(imgcnv.NewImageFile),
 	}
 
 	err := cli.Execute(os.Args)
