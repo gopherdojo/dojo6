@@ -1,3 +1,3 @@
-module github.com/gopherdojo/dojo6/kadai1/dobuzora
+module github.com/gopherdojo/dojo6/kadai2/dobuzora
 
 go 1.12

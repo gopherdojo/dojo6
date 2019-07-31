@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	cnv "github.com/gopherdojo/dojo6/kadai1/dobuzora/internal/convert"
+	cnv "github.com/gopherdojo/dojo6/kadai2/dobuzora/internal/convert"
 )
 
 // isDir は ディレクトリかどうかを判断します

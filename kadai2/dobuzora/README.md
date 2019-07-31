@@ -1,26 +1,41 @@
-# 課題 1
+# 課題 2
 
-## 画像変換コマンドを作ろう
+## io.Readerとio.Writer
+io.Readerとio.Writerについて調べてみよう
 
-### 仕様
+### 標準パッケージではどのように使われているか
+私がよく使ったのは`func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error)`です。
+第一引数が`io.Writer`となっているため、条件を満たしているものは何でも引数に指定できるため頻繁に使っています。
+`io.Writer`は`Write(p []byte) (n int, err error)`メソッドを持っていればよい。
+このため、`func (f *File) Write(b []byte) (n int, err error)`を持つ`os.File`オブジェクトを指定すればファイルに出力することができる。
 
-- [x] ディレクトリを指定する
-- [x] 指定したディレクトリ以下の JPG ファイルを PNG に変換
-- [x] ディレクトリ以下は再帰的に処理する
-- [ ] 変換前と変換後の画像形式に指定できる(オプション)
+io.Readerは競技プログラミングでお世話になります。
+読み込み高速化のために`bufio.NewScanner`を頻繁に使いますが、これは`func NewScanner(r io.Reader) *Scanner`です。
+僕は`bufio.NewScanner(os.Stdin)`をよく使いますが、`os.Stdin`は、`Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")`です。
+NewFile関数について調べると`func NewFile(fd uintptr, name string) *File`であり、Fileオブジェクトを返します。
+Fileオブジェクトは`func (f *File) Read(b []byte) (n int, err error)`であるため、`io.Reader`を満たします。
+普段は、`os.Stdin`しか使いませんが、別の入力を読み込む時は`buio.NewScanner`の引数を`io.Reader`を満たしているものに変えれば同様に読み込めます。
 
-### 要件
+### io.Readerとio.Writerがあることでどういう利点があるのかを具体的に挙げて考えてみる。
 
-- [x] main パッケージと分離する
-- [x] 自作パッケージと標準パッケージと準標準パッケージのみを使う
-- [x] ユーザ定義型を使ってみる
-- [x] GoDoc を生成してみる
+上記でも、触れた通り書き込むこと、読み込むことに関して抽象化されていることによりプログラマーがほとんど意識を割く必要がない点に大きな利点があると考えます。
+
+## テストを書いてみよう
+1回目の宿題のテストを作ってみてください
+
+### テストのしやすさを考えてリファクタリングしてみる
+
+### テストのカバレッジを取ってみる
+
+### テーブル駆動テストを行う
+
+### テストヘルパーを作ってみる
 
 ## Install
 
 ```
 export GOBIN=`pwd`/_bin
-$ go install github.com/gopherdojo/dojo6/kadai1/cmd/j2p
+$ go install github.com/gopherdojo/dojo6/kadai2/dobuzora/cmd/j2p
 $ _bin/cmd
 ```
 
@@ -31,9 +46,3 @@ $ _bin/cmd
 ```
 
 ## 回答
-
-最初に、ユーザ定義型を作らずに実装しました。これは狙ったわけではなく私の設計では活用場面が浮かばなかったためです。しかし、要件にはユーザ定義型を使うとのことなので、`convert`パッケージに`ConvertFile`という変換前と変換後のパスを含むファイル名の文字列を持つ型を定義して変換を行うようにしました。
-
-一番つまずいた点は動作確認を終えて`main`パッケージから分離する際に、突然動かなくなってしまったことです。これは、`main`パッケージに含まれていた`_ "image/jpeg"`が分離する際に消えてしまったためでした。delve で潜ってもわからず、時間経過でなくなっていることに気が付きました。分離する前に一度コミットしておけば、比較してすぐにわかったので経験不足でした。
-
-ディレクトリの構成は、tenntenn さんが okinawa.go で行ってくだささった勉強会の資料及びリポジトリを参考にしました。
