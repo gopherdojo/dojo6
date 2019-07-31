@@ -16,6 +16,7 @@ func main() {
 
 	err := cli.Execute(os.Args)
 	if err != nil {
-		fmt.Printf("%v", err)
+		fmt.Fprintf(os.Stderr, "ERR:%v", err)
+		os.Exit(-1)
 	}
 }
