@@ -8,10 +8,10 @@ var inputtests = []struct {
 }{
 	{"ninja.png", "ninja"},
 	{"ninja.jpeg", "ninja"},
-	{".jpg", ""},
+	{"n.jpg", "n"},
 }
 
-func TestgetFileNameWithoutExt(t *testing.T) {
+func TestGetFileNameWithoutExt(t *testing.T) {
 	for _, c := range inputtests {
 		actual := getFileNameWithoutExt(c.in)
 		if actual != c.expected {
