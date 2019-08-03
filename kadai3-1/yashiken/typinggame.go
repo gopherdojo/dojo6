@@ -32,6 +32,7 @@ func main() {
 	fmt.Printf("タイピングゲームを始めます。制限時間は%d分です。\n", t)
 	for i := true; i && score < len(words); {
 		qst := words[score]
+		fmt.Println(qst)
 		select {
 		case ans := <-chrcv:
 			if qst == ans {
