@@ -1,1 +1,9 @@
 # 課題2
+## io.Readerとio.Writerについて
+### 概要
+- io.Reader
+    - Read()のメソッドをもつインターフェース
+- io.Writer
+    - Write()メソッドをもつインターフェース
+### 標準パッケージでの使われ方
+- bufio
