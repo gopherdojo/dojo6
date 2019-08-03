@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"time"
 )
@@ -27,6 +28,7 @@ func main() {
 	words, err := getWords(s)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	fmt.Printf("タイピングゲームを始めます。制限時間は%d分です。\n", t)
@@ -62,6 +64,9 @@ func getWords(s string) ([]string, error) {
 	if err = scanner.Err(); err != nil {
 		return nil, err
 	}
+
+	sl = shuffle(sl)
+
 	return sl, nil
 }
 
@@ -74,4 +79,13 @@ func input(r io.Reader) <-chan string {
 		}
 	}()
 	return ch
+}
+
+func shuffle(s []string) []string {
+	rand.Seed(time.Now().UnixNano())
+	for i := range s {
+		j := rand.Intn(len(s))
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
 }
