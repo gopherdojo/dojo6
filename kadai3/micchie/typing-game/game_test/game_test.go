@@ -2,11 +2,27 @@ package game_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/gopherdojo/dojo6/kadai3/micchie/typing-game/game"
 )
 
 func TestGame_Run(t *testing.T) {
+	g := &game.Game{}
+	g.TimeLimit = 5 * time.Second
+	g.Words = []string{
+		"bear",
+		"bear",
+	}
+
+	ch := make(chan string)
+	go func() {
+		time.Sleep(2 * time.Second)
+		ch <- "bear"
+		time.Sleep(2 * time.Second)
+		ch <- "beer"
+	}()
+
 }
 
 func TestGame_Judgment(t *testing.T) {

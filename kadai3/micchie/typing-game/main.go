@@ -28,9 +28,7 @@ func main() {
 	shuffle(list)
 
 	g := game.NewGame(ctx, os.Stdout, os.Stdin, t, list)
-	if err := g.Run(); err != nil {
-		os.Exit(0)
-	}
+	g.Run()
 }
 
 func shuffle(list []string) {

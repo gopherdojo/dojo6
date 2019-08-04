@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func NewGame(ctx context.Context, w io.Writer, r io.Reader, t time.Duration, wor
 
 // Run は TimeLimit に経過時間が達するまで Words をランダムに表示します.
 // Word と同じ文字列を入力すると, correct!! 異なった文字列を入力すると, incorrect!! と表示されます.
-func (g *Game) Run() error {
+func (g *Game) Run() {
 	fmt.Fprintln(g.Output, "===== Typing Game Start =====")
 
 	scan := make(chan string)
@@ -46,6 +47,9 @@ func (g *Game) Run() error {
 		defer close(scan)
 		for scanner.Scan() {
 			scan <- scanner.Text()
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintln(os.Stderr, "input:", err)
 		}
 	}()
 
@@ -61,8 +65,7 @@ func (g *Game) Run() error {
 				g.Score.Count,
 				g.Score.CorrectNumber,
 			))
-			return nil
-
+			return
 		}
 
 		select {
@@ -72,7 +75,7 @@ func (g *Game) Run() error {
 				g.TimeLimit,
 				g.Score.CorrectNumber,
 			))
-			return nil
+			return
 		case input := <-scan:
 			switch {
 			case g.Judgment(word, input):
