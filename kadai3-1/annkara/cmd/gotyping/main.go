@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dojo6/kadai3-1/annkara/gotyping"
+	"github.com/dojo6/kadai3-1/annkara/pkg/gotyping"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 	log.SetFlags(0)
 
 	var exitCode int
-	err := gotyping.Run(os.Args[1:], os.Stdout, os.Stderr)
+	err := gotyping.Run(os.Stdout, os.Stderr)
 	if err != nil {
 		log.Println(err)
 		exitCode = 1
