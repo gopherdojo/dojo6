@@ -69,7 +69,9 @@ func getWords(s string) ([]string, error) {
 	var sl []string
 
 	for scanner.Scan() {
-		sl = append(sl, scanner.Text())
+		if scanner.Text() != "" {
+			sl = append(sl, scanner.Text())
+		}
 	}
 	if err = scanner.Err(); err != nil {
 		return nil, err
