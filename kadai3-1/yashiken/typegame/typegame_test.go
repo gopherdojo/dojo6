@@ -1,4 +1,4 @@
-package main
+package typegame_test
 
 import (
 	"bytes"
@@ -6,9 +6,11 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+
+	"github.com/gopherdojo/dojo6/kadai3-1/yashiken/typegame"
 )
 
-func TestGetWords(t *testing.T) {
+func TestWords(t *testing.T) {
 	cases := []struct {
 		name      string
 		file      string
@@ -39,7 +41,7 @@ func TestGetWords(t *testing.T) {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
 			path := filepath.Join("testdata/" + c.file)
-			sl, err := getWords(path)
+			sl, err := typegame.Words(path)
 			if !reflect.DeepEqual(sl, c.output) && err != c.expectErr {
 				t.Errorf("Input file is %v. expected output is %v, but getWords returns %v", c.file, c.output, sl)
 			}
@@ -62,7 +64,7 @@ func TestInput(t *testing.T) {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
 			r := bytes.NewBuffer([]byte(c.input))
-			if got := <-input(r); got != c.output {
+			if got := <-typegame.Input(r); got != c.output {
 				t.Errorf("Input is %v. Expected output is %v ,but input returns %v", c.input, c.output, got)
 			}
 		})
@@ -89,7 +91,7 @@ func TestShuffle(t *testing.T) {
 			)
 			// ランダムにスライスの要素を入れ替えるため、十分な回数shuffleを実行
 			for i := 1; i < 1000; i++ {
-				if result = shuffle(c.input); reflect.DeepEqual(result, c.output) {
+				if result = typegame.Shuffle(c.input); reflect.DeepEqual(result, c.output) {
 					success = true
 					break
 				}
