@@ -39,13 +39,18 @@ func Run(outStream, errStream io.Writer) error {
 	return nil
 }
 
+type data struct {
+	in  string
+	err error
+}
+
 func (g *gotyping) start() error {
 
 	rand.Seed(time.Now().Unix())
 	fmt.Fprintln(g.outStream, "=== gotyping start ===")
 
-	in := make(chan string)
-	go input(in)
+	in := make(chan data)
+	input(in)
 
 END:
 	for {
@@ -57,9 +62,13 @@ END:
 			fmt.Fprintln(g.outStream, "=== gotyping finish ===")
 			break END
 		case answer := <-in:
-			if question == answer {
+			if answer.err != nil {
+				return answer.err
+			}
+			if answer.in == question {
 				g.result++
 			}
+
 		}
 	}
 
@@ -72,9 +81,12 @@ func word() string {
 	return words[rand.Intn(len(words))]
 }
 
-func input(in chan string) {
+func input(in chan data) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		in <- scanner.Text()
+		in <- data{in: scanner.Text()}
+	}
+	if err := scanner.Err(); err != nil {
+		in <- data{err: err}
 	}
 }
