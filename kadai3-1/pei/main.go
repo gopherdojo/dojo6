@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/gopherdojo/dojo6/kadai3-1/pei/pkg/wordsreader"
 	"github.com/gopherdojo/dojo6/kadai3-1/pei/pkg/typing"
+	"github.com/gopherdojo/dojo6/kadai3-1/pei/pkg/wordsreader"
 )
 
 const (

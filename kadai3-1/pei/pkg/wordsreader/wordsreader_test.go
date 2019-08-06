@@ -6,7 +6,10 @@ import (
 )
 
 func TestWordsReader_Read(t *testing.T) {
-	cases := []struct {fileName string; expected []string}{
+	cases := []struct {
+		fileName string
+		expected []string
+	}{
 		{fileName: "./testdata/test1.txt", expected: []string{"a", "b", "c"}},
 		{fileName: "./testdata/test2.txt", expected: []string{"a"}},
 	}
