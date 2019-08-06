@@ -1,5 +1,5 @@
 ROOT=github.com/gopherdojo/dojo6/kadai3-1/pei
-BIN=bin/typing
+BIN=typing
 MAIN=main.go
 TEST=...
 
