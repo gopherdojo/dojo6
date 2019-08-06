@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Question receives words and returns isCorrectCh
 func Question(words []string) <-chan bool {
 	isCorrectCh := make(chan bool)
 

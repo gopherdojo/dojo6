@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gopherdojo/dojo6/kadai3-1/pei/pkg/wordsreader"
 	"github.com/gopherdojo/dojo6/kadai3-1/pei/pkg/typing"
 )
 
@@ -20,7 +21,11 @@ func main() {
 func execute() int {
 	fmt.Println("Start Typing Game!")
 
-	words := []string{"a", "b", "c"}
+	wr := &wordsreader.WordsReader{FileName: "./textdata/words.txt"}
+	words, err := wr.Read()
+	if err != nil {
+		return ExitCodeError
+	}
 
 	typingCh := typing.Question(words)
 	timerCh := time.After(5 * time.Second)
