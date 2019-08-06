@@ -1,0 +1,22 @@
+package main
+
+import (
+	"log"
+	"os"
+
+	"github.com/dojo6/kadai3-1/annkara/pkg/gotyping"
+)
+
+func main() {
+
+	// 標準ロガーに日時などの情報を付加しない
+	log.SetFlags(0)
+
+	var exitCode int
+	err := gotyping.Run(os.Stdout)
+	if err != nil {
+		log.Println(err)
+		exitCode = 1
+	}
+	os.Exit(exitCode)
+}
