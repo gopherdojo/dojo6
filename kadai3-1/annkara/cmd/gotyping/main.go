@@ -13,7 +13,7 @@ func main() {
 	log.SetFlags(0)
 
 	var exitCode int
-	err := gotyping.Run(os.Stdout, os.Stderr)
+	err := gotyping.Run(os.Stdout)
 	if err != nil {
 		log.Println(err)
 		exitCode = 1
