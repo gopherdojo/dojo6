@@ -12,13 +12,12 @@ import (
 
 type gotyping struct {
 	outStream io.Writer
-	errStream io.Writer
 	limits    time.Duration
 	result    int
 }
 
 // Run the gotyping
-func Run(outStream, errStream io.Writer) error {
+func Run(outStream io.Writer) error {
 
 	var l int
 	flag.IntVar(&l, "limits", 60, "制限時間")
@@ -26,7 +25,6 @@ func Run(outStream, errStream io.Writer) error {
 
 	g := gotyping{
 		outStream: outStream,
-		errStream: errStream,
 		limits:    time.Duration(l) * time.Second,
 	}
 
