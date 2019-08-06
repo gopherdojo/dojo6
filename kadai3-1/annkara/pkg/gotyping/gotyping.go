@@ -50,7 +50,7 @@ func (g *gotyping) start() error {
 	fmt.Fprintln(g.outStream, "=== gotyping start ===")
 
 	in := make(chan data)
-	input(in)
+	go input(os.Stdin, in)
 
 END:
 	for {
@@ -68,7 +68,6 @@ END:
 			if answer.in == question {
 				g.result++
 			}
-
 		}
 	}
 
@@ -77,12 +76,12 @@ END:
 }
 
 func word() string {
-	words := []string{"go", "Java", "C", "ruby", "perl", "assmbler"}
+	words := []string{"go", "Java", "C", "ruby", "perl", "assembler"}
 	return words[rand.Intn(len(words))]
 }
 
-func input(in chan data) {
-	scanner := bufio.NewScanner(os.Stdin)
+func input(r io.Reader, in chan data) {
+	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		in <- data{in: scanner.Text()}
 	}
