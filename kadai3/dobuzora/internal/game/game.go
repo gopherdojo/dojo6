@@ -1,3 +1,6 @@
+/*
+Package game implements typing game for terminal.
+*/
 package game
 
 import (
@@ -5,10 +8,10 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math/rand"
 	"time"
 )
 
-// ゲームの情報を管理
 type Game struct {
 	r                io.Reader
 	w                io.Writer
@@ -18,6 +21,7 @@ type Game struct {
 	correctAnswerNum int
 }
 
+// New for game package
 func New(reader io.Reader, writer io.Writer, timeLimit time.Duration, questions []string) *Game {
 	return &Game{
 		r:         reader,
@@ -27,18 +31,23 @@ func New(reader io.Reader, writer io.Writer, timeLimit time.Duration, questions 
 	}
 }
 
+// Play is to start type game.
 func (gm *Game) Play() {
 	gm.displayRule()
+	gm.shuffleQuestion()
 	gm.playGame()
 }
 
+// displayRule is to display rules of type game.
 func (gm *Game) displayRule() {
 	fmt.Fprintf(gm.w, "画面に表示される英単語を入力しましょう!")
 	fmt.Fprintf(gm.w, "制限時間は%dです\n", gm.timeLimit)
 }
 
+// playGame is type-game core logic.
 func (gm *Game) playGame() {
-	ctx, cancel := context.WithTimeout(context.Background(), gm.timeLimit*time.Second)
+	bc := context.Background()
+	ctx, cancel := context.WithTimeout(bc, gm.timeLimit*time.Second)
 	defer cancel()
 
 	ch := gm.input()
@@ -71,15 +80,25 @@ gameLoop:
 	}
 }
 
+// displayResult is to display the result of type game.
 func (gm *Game) displayResult() {
+}
+
+// shuffleQuestion is to shuffle given questions of typing game.
+func (gm *Game) shuffleQuestion() {
+	n := len(gm.questions)
+	for i := n - 1; i >= 0; i-- {
+		j := rand.Intn(i + 1)
+		gm.questions[i], gm.questions[j] = gm.questions[j], gm.questions[i]
+	}
 }
 
 func (gm *Game) input() <-chan string {
 	ch := make(chan string)
 	go func() {
-		s := bufio.NewScanner(gm.r)
-		for s.Scan() {
-			ch <- s.Text()
+		sc := bufio.NewScanner(gm.r)
+		for sc.Scan() {
+			ch <- sc.Text()
 		}
 		close(ch)
 	}()

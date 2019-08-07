@@ -11,7 +11,7 @@ const timeLimit = 10
 var (
 	reader    = os.Stdin
 	writer    = os.Stdout
-	questions = []string{"public", "void", "func", "return", "continue"}
+	questions = []string{"public", "void", "func", "return", "continue", "for", "go", "float"}
 )
 
 func main() {
