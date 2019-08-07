@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gopherdojo/dojo6/kadai3/en-ken/typing"
+	typing "github.com/gopherdojo/dojo6/kadai3/en-ken"
 )
 
 func main() {

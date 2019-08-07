@@ -3,7 +3,7 @@ package typing_test
 import (
 	"testing"
 
-	"github.com/gopherdojo/dojo6/kadai3/en-ken/typing"
+	typing "github.com/gopherdojo/dojo6/kadai3/en-ken"
 )
 
 var dict = []string{"ABC", "DEF", "GHI", "JKL", "MNO", "PQR", "STU", "VWX", "YZ"}
