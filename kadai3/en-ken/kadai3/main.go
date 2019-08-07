@@ -27,7 +27,7 @@ type Typing interface {
 	IsCorrect(input string) bool
 }
 
-func execute(chInput <-chan string, chFinish <-chan time.Time, stdout *os.File, t Typing) {
+func execute(chInput <-chan string, chFinish <-chan time.Time, stdout io.Writer, t Typing) {
 
 	score := 0
 	for i := 1; ; i++ {
@@ -39,7 +39,7 @@ func execute(chInput <-chan string, chFinish <-chan time.Time, stdout *os.File, 
 				score++
 				fmt.Fprintln(stdout, "Correct!")
 			} else {
-				fmt.Fprintln(stdout, "Correct!")
+				fmt.Fprintln(stdout, "Miss!")
 			}
 		case <-chFinish:
 			fmt.Fprintln(stdout, "\nTime's up!!")
