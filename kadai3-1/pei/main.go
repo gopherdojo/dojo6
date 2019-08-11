@@ -24,14 +24,17 @@ func execute() int {
 	wr := &wordsreader.WordsReader{FileName: "./textdata/words.txt"}
 	words, err := wr.Read()
 	if err != nil {
+		fmt.Errorf("%v", err)
 		return ExitCodeError
 	}
 
 	typingCh := typing.Question(words)
 	timerCh := time.After(5 * time.Second)
 
-	counter := 0
-	correctCounter := 0
+	var (
+		counter        int
+		correctCounter int
+	)
 
 	for {
 		counter++
