@@ -12,7 +12,7 @@ type WordsReader struct {
 
 // Read file
 func (wr WordsReader) Read() ([]string, error) {
-	words := make([]string, 0)
+	var words []string
 
 	fp, err := os.Open(wr.FileName)
 	if err != nil {
@@ -23,6 +23,10 @@ func (wr WordsReader) Read() ([]string, error) {
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
 		words = append(words, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
 	}
 
 	return words, nil

@@ -18,8 +18,13 @@ func TestWordsReader_Read(t *testing.T) {
 		c := c
 		t.Run(c.fileName, func(t *testing.T) {
 			t.Parallel()
-			wr := WordsReader{FileName: c.fileName}
-			if actual, _ := wr.Read(); !reflect.DeepEqual(c.expected, actual) {
+
+			actual, err := WordsReader{FileName: c.fileName}.Read()
+			if err != nil {
+				t.Errorf("failed to open file")
+			}
+
+			if !reflect.DeepEqual(c.expected, actual) {
 				t.Errorf("want %v, got %v", c.expected, actual)
 			}
 		})
