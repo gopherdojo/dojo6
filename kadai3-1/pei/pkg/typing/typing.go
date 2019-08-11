@@ -16,19 +16,25 @@ func Question(words []string) <-chan bool {
 		stdin := bufio.NewScanner(os.Stdin)
 		rand.Seed(time.Now().UnixNano())
 
+		defer close(isCorrectCh)
 		for {
 			word := words[rand.Intn(len(words))]
 			fmt.Println(word)
 
 			stdin.Scan()
 			answer := stdin.Text()
+
+			if err := stdin.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				isCorrectCh <- false
+			}
+
 			if word == answer {
 				isCorrectCh <- true
 			} else {
 				isCorrectCh <- false
 			}
 		}
-		close(isCorrectCh)
 	}()
 
 	return isCorrectCh
