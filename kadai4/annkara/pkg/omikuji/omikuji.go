@@ -1,6 +1,10 @@
 package omikuji
 
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+	"net/http"
+)
 
 // Draw a omikuji
 func Draw() (int, string) {
@@ -20,4 +24,10 @@ func Draw() (int, string) {
 		return Draw()
 	}
 	return me, unsei
+}
+
+// Omikuji HTTP Handler
+func Handler(w http.ResponseWriter, r *http.Request) {
+	_, unsei := Draw()
+	fmt.Fprint(w, unsei)
 }
