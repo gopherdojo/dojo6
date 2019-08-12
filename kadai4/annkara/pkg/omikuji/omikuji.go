@@ -13,8 +13,8 @@ type Omikuji struct {
 	Unsei string `json:"unsei"`
 }
 
-// Draw a omikuji
-func Draw(t time.Time) (int, string) {
+// Hiku a omikuji
+func Hiku(t time.Time) (int, string) {
 
 	if shogatsu(t) {
 		return 0, "大吉"
@@ -32,7 +32,7 @@ func Draw(t time.Time) (int, string) {
 	case 1:
 		unsei = "凶"
 	default:
-		return Draw(t)
+		return Hiku(t)
 	}
 	return me, unsei
 }
@@ -50,7 +50,7 @@ func shogatsu(t time.Time) bool {
 
 // Handler provides Omikuji Handler
 func Handler(w http.ResponseWriter, r *http.Request) {
-	me, unsei := Draw(time.Now())
+	me, unsei := Hiku(time.Now())
 	o := &Omikuji{Me: me, Unsei: unsei}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")

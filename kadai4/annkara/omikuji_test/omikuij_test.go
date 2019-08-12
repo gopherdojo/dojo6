@@ -35,7 +35,7 @@ func TestOmikuji(t *testing.T) {
 			return
 		}
 
-		me, unsei := omikuji.Draw(time.Now())
+		me, unsei := omikuji.Hiku(time.Now())
 		switch me {
 		case 6:
 			r.r6 = true
@@ -94,7 +94,7 @@ func TestOmikujiInShogatsu(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_, unsei := omikuji.Draw(test.date)
+		_, unsei := omikuji.Hiku(test.date)
 		if unsei != test.expected {
 			t.Errorf("Unexpected Unsei: expected %s, actual %s", test.expected, unsei)
 		}
