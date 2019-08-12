@@ -2,6 +2,8 @@ package main_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -26,6 +28,33 @@ func TestServer(t *testing.T) {
 	if err = json.NewDecoder(res.Body).Decode(&d); err != nil {
 		t.Errorf("Data format error:%v", err)
 	}
+}
+
+type EncoderMock struct {
+}
+
+func NewEncoderMock(w io.Writer) main.Encoder {
+	return &EncoderMock{}
+}
+
+func (enc *EncoderMock) Encode(v interface{}) error {
+	return fmt.Errorf("Internal server error")
+}
+
+func TestServerInternalServerError(t *testing.T) {
+	main.SetNewEncoder(NewEncoderMock)
+	defer main.SetNewEncoder(main.NewEncoder(func(w io.Writer) main.Encoder {
+		return json.NewEncoder(w)
+	}))
+
+	ts := httptest.NewServer(http.HandlerFunc(main.Handler))
+	defer ts.Close()
+
+	res, _ := http.Get(ts.URL)
+	if res.StatusCode != 500 {
+		t.Errorf("Response code error:%v", res.StatusCode)
+	}
+
 }
 
 func TestHandler(t *testing.T) {
