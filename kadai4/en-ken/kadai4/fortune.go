@@ -5,13 +5,14 @@ import (
 	"time"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 // For testing
 var now = time.Now
 var fortunes []string
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+	fortunes = []string{"大吉", "吉", "中吉", "小吉", "末吉", "凶", "大凶"}
+}
 
 func getFortune() string {
 	i := rand.Int() % len(fortunes)

@@ -14,3 +14,7 @@ func SetNow(n func() time.Time) {
 func SetFortunes(f []string) {
 	fortunes = f
 }
+
+func SetNewEncoder(n NewEncoder) {
+	newEncoder = n
+}
