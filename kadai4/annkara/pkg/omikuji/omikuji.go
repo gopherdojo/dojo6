@@ -2,9 +2,9 @@ package omikuji
 
 import (
 	"encoding/json"
-	"log"
 	"math/rand"
 	"net/http"
+	"time"
 )
 
 // Omikuji Result
@@ -14,7 +14,11 @@ type Omikuji struct {
 }
 
 // Draw a omikuji
-func Draw() (int, string) {
+func Draw(t time.Time) (int, string) {
+
+	if shogatsu(t) {
+		return 0, "大吉"
+	}
 
 	me := rand.Intn(7)
 	var unsei string
@@ -28,18 +32,29 @@ func Draw() (int, string) {
 	case 1:
 		unsei = "凶"
 	default:
-		return Draw()
+		return Draw(t)
 	}
 	return me, unsei
 }
 
+func shogatsu(t time.Time) bool {
+
+	if t.Month() == time.January {
+		if (t.Day() == 1) || (t.Day() == 2) || (t.Day() == 3) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Handler provides Omikuji Handler
 func Handler(w http.ResponseWriter, r *http.Request) {
-	me, unsei := Draw()
+	me, unsei := Draw(time.Now())
 	o := &Omikuji{Me: me, Unsei: unsei}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if err := json.NewEncoder(w).Encode(o); err != nil {
-		log.Println("Error: ", err)
+		http.Error(w, "Omikuji Error", http.StatusInternalServerError)
 	}
 }

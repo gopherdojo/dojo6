@@ -35,7 +35,7 @@ func TestOmikuji(t *testing.T) {
 			return
 		}
 
-		me, unsei := omikuji.Draw()
+		me, unsei := omikuji.Draw(time.Now())
 		switch me {
 		case 6:
 			r.r6 = true
@@ -67,6 +67,36 @@ func TestOmikuji(t *testing.T) {
 			}
 		default:
 			t.Fatalf("Invalid value %d", me)
+		}
+	}
+}
+
+func TestOmikujiInShogatsu(t *testing.T) {
+
+	tests := []struct {
+		desc     string
+		date     time.Time
+		expected string
+	}{
+		{
+			desc:     "1月1日",
+			date:     time.Date(2019, time.January, 1, 0, 0, 0, 0, time.Local),
+			expected: "大吉",
+		}, {
+			desc:     "1月2日",
+			date:     time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local),
+			expected: "大吉",
+		}, {
+			desc:     "1月3日",
+			date:     time.Date(2019, time.January, 3, 0, 0, 0, 0, time.Local),
+			expected: "大吉",
+		},
+	}
+
+	for _, test := range tests {
+		_, unsei := omikuji.Draw(test.date)
+		if unsei != test.expected {
+			t.Errorf("Unexpected Unsei: expected %s, actual %s", test.expected, unsei)
 		}
 	}
 }
