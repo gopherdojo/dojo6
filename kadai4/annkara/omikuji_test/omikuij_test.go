@@ -1,7 +1,10 @@
 package omikuji_test
 
 import (
+	"io/ioutil"
 	"math/rand"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -65,5 +68,21 @@ func TestOmikuji(t *testing.T) {
 		default:
 			t.Fatalf("Invalid value %d", me)
 		}
+	}
+}
+
+func TestHandler(t *testing.T) {
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("GET", "/", nil)
+	omikuji.Handler(w, r)
+	wr := w.Result()
+	defer wr.Body.Close()
+
+	if wr.StatusCode != http.StatusOK {
+		t.Fatal("unexpecete status code")
+	}
+	_, err := ioutil.ReadAll(wr.Body)
+	if err != nil {
+		t.Fatalf("unexpected error")
 	}
 }

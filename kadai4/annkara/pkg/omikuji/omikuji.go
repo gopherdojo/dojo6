@@ -1,10 +1,17 @@
 package omikuji
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"math/rand"
 	"net/http"
 )
+
+// Omikuji Result
+type Omikuji struct {
+	Me    int    `json:"me"`
+	Unsei string `json:"unsei"`
+}
 
 // Draw a omikuji
 func Draw() (int, string) {
@@ -26,8 +33,13 @@ func Draw() (int, string) {
 	return me, unsei
 }
 
-// Omikuji HTTP Handler
+// Handler provides Omikuji Handler
 func Handler(w http.ResponseWriter, r *http.Request) {
-	_, unsei := Draw()
-	fmt.Fprint(w, unsei)
+	me, unsei := Draw()
+	o := &Omikuji{Me: me, Unsei: unsei}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err := json.NewEncoder(w).Encode(o); err != nil {
+		log.Println("Error: ", err)
+	}
 }
