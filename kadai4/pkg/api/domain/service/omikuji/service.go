@@ -1,9 +1,9 @@
 package omikuji
 
 import (
-	"bytes"
-	"encoding/json"
-	"time"
+	"context"
+
+	"omikuji-app/pkg/api/ocontext"
 
 	entity "omikuji-app/pkg/api/domain/entity/omikuji"
 )
@@ -62,7 +62,7 @@ var rs = entity.OmikujiResults{
 }
 
 type OmikujiService interface {
-	Draw() (string, error)
+	Draw(ctx context.Context) entity.OmikujiResult
 }
 
 type omikujiService struct {
@@ -73,17 +73,11 @@ func New() OmikujiService {
 }
 
 // Draw おみくじを引く.
-func (s *omikujiService) Draw() (string, error) {
-	t := time.Now()
+func (s *omikujiService) Draw(ctx context.Context) entity.OmikujiResult {
+	t := ocontext.GetAccessTime(ctx)
 	day := t.Format("1/2")
 	if day == "1/1" || day == "1/2" || day == "1/3" {
 		rs = rs.ExtractByRuck("大吉")
 	}
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err := enc.Encode(rs.FindRandom()); err != nil {
-		// JSONエンコードに失敗しました
-		return "", err
-	}
-	return buf.String(), nil
+	return rs.FindRandom()
 }
