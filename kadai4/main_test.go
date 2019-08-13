@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -24,8 +25,14 @@ func TestHandler(t *testing.T) {
 		t.Fatal("unexpected error")
 	}
 
-	const expected = `{"msg":"大吉"}`
-	if s := string(b); s != expected {
-		t.Fatalf("unexpected response: %s", s)
+	res := &Response{}
+	// TODO: 実行時のseeder設定により、大吉しか返ってないので、テストが通る
+	const expected = "大吉"
+	if err := json.Unmarshal(b, res); err != nil {
+		t.Fatalf("JSON unmarshall error: %v", err)
+	}
+
+	if res.Msg != string(expected) {
+		t.Fatalf("unexpected response: %s", res.Msg)
 	}
 }
