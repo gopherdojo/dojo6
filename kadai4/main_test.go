@@ -24,7 +24,7 @@ func TestHandler(t *testing.T) {
 		t.Fatal("unexpected error")
 	}
 
-	const expected = `{"msg":"json response"}`
+	const expected = `{"msg":"大吉"}`
 	if s := string(b); s != expected {
 		t.Fatalf("unexpected response: %s", s)
 	}
