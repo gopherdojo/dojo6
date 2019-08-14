@@ -39,6 +39,13 @@ func Test_omikujiService_Draw(t *testing.T) {
 		want string
 	}{
 		{
+			name: "正月以外のおみくじ",
+			s:    &omikujiService{},
+			args: args{
+				ctx: ocontext.SetAccessTime(context.Background(), time.Date(2000, 1, 4, 3, 4, 5, 6, time.Local)),
+			},
+		},
+		{
 			name: "1/2のおみくじ",
 			s:    &omikujiService{},
 			args: args{
@@ -49,7 +56,8 @@ func Test_omikujiService_Draw(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.s.Draw(tt.args.ctx); !reflect.DeepEqual(got.Ruck, tt.want) {
+			got := tt.s.Draw(tt.args.ctx)
+			if tt.want != "" && !reflect.DeepEqual(got.Ruck, tt.want) {
 				t.Errorf("omikujiService.Draw() = %v, want %v", got, tt.want)
 			}
 		})

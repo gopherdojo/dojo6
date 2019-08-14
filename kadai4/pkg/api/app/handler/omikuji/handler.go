@@ -1,32 +1,27 @@
 package omikuji
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 
-	service "omikuji-app/pkg/api/domain/service/omikuji"
+	interactor "omikuji-app/pkg/api/app/interactor/omikuji"
 )
 
 type omikujiHandler struct {
-	omikujiService service.OmikujiService
+	omikujiInteractor interactor.OmikujiInteractor
 }
 
-func New(s service.OmikujiService) http.Handler {
-	return &omikujiHandler{omikujiService: s}
+func New(i interactor.OmikujiInteractor) http.Handler {
+	return &omikujiHandler{omikujiInteractor: i}
 }
 
 func (h *omikujiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	rs := h.omikujiService.Draw(ctx)
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err := enc.Encode(rs); err != nil {
+	res, err := h.omikujiInteractor.Draw(r.Context())
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "抽選に失敗しました. err = %v\n", err)
 		http.Error(w, "抽選に失敗しました.", http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "%s", buf.String())
+	fmt.Fprintf(w, "%s", res)
 }

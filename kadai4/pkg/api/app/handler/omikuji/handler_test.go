@@ -9,15 +9,14 @@ import (
 	"testing"
 	"time"
 
+	interactor "omikuji-app/pkg/api/app/interactor/omikuji"
+	mockInteractor "omikuji-app/pkg/api/app/interactor/omikuji/mock"
 	"omikuji-app/pkg/api/ocontext"
-
-	service "omikuji-app/pkg/api/domain/service/omikuji"
-	mockService "omikuji-app/pkg/api/domain/service/omikuji/mock"
 )
 
 func TestNew(t *testing.T) {
 	type args struct {
-		s service.OmikujiService
+		i interactor.OmikujiInteractor
 	}
 	tests := []struct {
 		name string
@@ -27,14 +26,14 @@ func TestNew(t *testing.T) {
 		{
 			name: "omikujiHandlerの生成",
 			args: args{
-				s: mockService.New(),
+				i: mockInteractor.New(),
 			},
-			want: &omikujiHandler{omikujiService: mockService.New()},
+			want: &omikujiHandler{omikujiInteractor: mockInteractor.New()},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := New(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := New(tt.args.i); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("New() = %v, want %v", got, tt.want)
 			}
 		})
@@ -43,7 +42,7 @@ func TestNew(t *testing.T) {
 
 func Test_omikujiHandler_ServeHTTP(t *testing.T) {
 	type fields struct {
-		omikujiService service.OmikujiService
+		omikujiInteractor interactor.OmikujiInteractor
 	}
 	type args struct {
 		w http.ResponseWriter
@@ -59,7 +58,7 @@ func Test_omikujiHandler_ServeHTTP(t *testing.T) {
 		{
 			name: "リクエスト成功",
 			fields: fields{
-				omikujiService: mockService.New(),
+				omikujiInteractor: mockInteractor.New(),
 			},
 			args: args{
 				w: httptest.NewRecorder(),
@@ -68,11 +67,23 @@ func Test_omikujiHandler_ServeHTTP(t *testing.T) {
 			want:     "{\"id\":4,\"ruck\":\"吉\",\"message\":\"吉です！良い運勢ですね！\"}\n",
 			wantCode: http.StatusOK,
 		},
+		{
+			name: "リクエスト失敗",
+			fields: fields{
+				omikujiInteractor: mockInteractor.NewError(),
+			},
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/", nil).WithContext(ocontext.SetAccessTime(context.Background(), time.Now())),
+			},
+			want:     "抽選に失敗しました.\n",
+			wantCode: http.StatusInternalServerError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			h := &omikujiHandler{
-				omikujiService: tt.fields.omikujiService,
+				omikujiInteractor: tt.fields.omikujiInteractor,
 			}
 			h.ServeHTTP(tt.args.w, tt.args.r)
 			rw := tt.args.w.(*httptest.ResponseRecorder).Result()

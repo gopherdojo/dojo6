@@ -12,12 +12,6 @@ type MiddleWare interface {
 	ServeNext(h http.Handler) http.Handler
 }
 
-type MiddleWareFunc func(h http.Handler) http.Handler
-
-func (f MiddleWareFunc) ServeNext(h http.Handler) http.Handler {
-	return f(h)
-}
-
 func With(h http.Handler, ms ...MiddleWare) http.Handler {
 	for _, m := range ms {
 		h = m.ServeNext(h)
