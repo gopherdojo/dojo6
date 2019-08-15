@@ -16,7 +16,7 @@ func init() {
 
 func main() {
 	flag.Parse()
-	f := fortune.NewFortune(fortune.Clock{})
+	f := fortune.NewFortune(fortune.DefaultClock{})
 	http.HandleFunc("/", f.Handler)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

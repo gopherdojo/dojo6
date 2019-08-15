@@ -1,8 +1,10 @@
-package fortune
+package fortune_test
 
 import (
 	"testing"
 	"time"
+
+	"github.com/gopherdojo/dojo6/kadai4/pei/pkg/fortune"
 )
 
 type MockClock struct {
@@ -22,15 +24,10 @@ func TestFortune_Drawing(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		c := c
-		t.Run(c.clock, func(t *testing.T) {
-			t.Parallel()
-
-			mc := &MockClock{c.clock}
-			f := fortune.NewFortune(mc)
-			if actual := f.Drawing(); actual != "大吉" {
-				t.Errorf("unexpected result: %s on %v", actual, mc.GetCurrentTime())
-			}
-		})
+		mc := &MockClock{c.clock}
+		f := fortune.NewFortune(mc)
+		if actual := f.Drawing(); actual != "大吉" {
+			t.Errorf("unexpected result: %s on %v", actual, mc.GetCurrentTime())
+		}
 	}
 }

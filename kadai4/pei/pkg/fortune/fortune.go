@@ -1,9 +1,11 @@
 package fortune
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"net/http"
 	"math/rand"
+	"net/http"
 	"time"
 )
 
@@ -16,11 +18,21 @@ var fortuneList = []string{
 }
 
 // Clock
-type Clock struct {}
+type Clock interface {
+	GetCurrentTime() time.Time
+}
+
+// DefaultClock
+type DefaultClock struct{}
 
 // Fortune
 type Fortune struct {
 	clock Clock
+}
+
+// DrawingResult
+type DrawingResult struct {
+	Result string `json:"result"`
 }
 
 func init() {
@@ -28,7 +40,7 @@ func init() {
 }
 
 // GetCurrentTime return current time
-func (c Clock) GetCurrentTime() time.Time {
+func (d DefaultClock) GetCurrentTime() time.Time {
 	return time.Now()
 }
 
@@ -61,6 +73,11 @@ func (f Fortune) Drawing() string {
 
 // Handler
 func (f Fortune) Handler(w http.ResponseWriter, r *http.Request) {
-	result := f.Drawing
-	fmt.Fprint(w, result)
+	var buf bytes.Buffer
+	dr := DrawingResult{Result: f.Drawing()}
+	enc := json.NewEncoder(&buf)
+	if err := enc.Encode(dr); err != nil {
+		fmt.Errorf("error: %v", err)
+	}
+	fmt.Fprint(w, buf.String())
 }
