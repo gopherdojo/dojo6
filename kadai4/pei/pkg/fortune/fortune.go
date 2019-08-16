@@ -71,6 +71,11 @@ func (f Fortune) Drawing() string {
 	return f.defaultDrawing()
 }
 
+// GetFortuneList return fortuneList
+func (f Fortune) GetFortuneList() []string {
+	return fortuneList
+}
+
 // Handler
 func (f Fortune) Handler(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
