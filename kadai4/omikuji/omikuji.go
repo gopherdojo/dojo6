@@ -1,7 +1,9 @@
 package omikuji
 
 import (
+	"fmt"
 	"math/rand"
+	"time"
 )
 
 var omikuji = map[int]string{
@@ -13,10 +15,28 @@ var omikuji = map[int]string{
 	5: "大吉",
 }
 
-func Do(month, day int) string {
+type Omikuji struct {
+	Time time.Time
+}
+
+func (o *Omikuji) SetSeed(seed int64) {
+	rand.Seed(seed)
+}
+
+type OmikujiError struct {
+	Msg string
+}
+
+func (err *OmikujiError) Error() string {
+	return fmt.Sprintf(err.Msg)
+}
+
+func (o *Omikuji) Do() (string, error) {
 	var i int
+
+	_, m, d := o.Time.Date()
 	// 1/1 ~ 1/3のみ大吉を出す
-	if month == 1 && day >= 1 && day <= 3 {
+	if int(m) == 1 && d >= 1 && d <= 3 {
 		i = 5
 	} else {
 		i = rand.Intn(len(omikuji))
@@ -24,8 +44,8 @@ func Do(month, day int) string {
 
 	s, ok := omikuji[i]
 	if !ok {
-		panic("omikuji panic.")
+		return "", &OmikujiError{"おみくじが引けませんでした。"}
 	}
 
-	return s
+	return s, nil
 }

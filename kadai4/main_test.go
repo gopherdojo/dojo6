@@ -26,7 +26,6 @@ func TestHandler(t *testing.T) {
 	}
 
 	res := &Response{}
-	// TODO: 実行時のseeder設定により、大吉しか返ってないので、テストが通る
 	const expected = "大吉"
 	if err := json.Unmarshal(b, res); err != nil {
 		t.Fatalf("JSON unmarshall error: %v", err)

@@ -2,11 +2,22 @@ package omikuji_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/gopherdojo/dojo6/kadai4/omikuji"
 )
 
-func Test_SpecificPeriodLottery(t *testing.T) {
+func Test_NormalTime(t *testing.T) {
+	time := time.Date(2019, time.Month(8), 16, 0, 0, 0, 0, time.Local)
+	omikuji := omikuji.Omikuji{time}
+	expect := "大吉"
+	actual, _ := omikuji.Do()
+	if expect != actual {
+		t.Errorf(`Omikuji error: expect="%s" actual="%s"`, expect, actual)
+	}
+}
+
+func Test_SpecificPeriod(t *testing.T) {
 	periods := map[int][]int{
 		1: {1, 2, 3},
 	}
@@ -15,11 +26,11 @@ func Test_SpecificPeriodLottery(t *testing.T) {
 
 	for m, days := range periods {
 		for _, d := range days {
-			for i := 0; i < 20; i++ {
-				actual := omikuji.Do(m, d)
-				if expect != actual {
-					t.Errorf(`Omikuji error: expect="%s" actual="%s"`, expect, actual)
-				}
+			time := time.Date(2019, time.Month(m), d, 0, 0, 0, 0, time.Local)
+			omikuji := omikuji.Omikuji{time}
+			actual, _ := omikuji.Do()
+			if expect != actual {
+				t.Errorf(`Omikuji error: expect="%s" actual="%s"`, expect, actual)
 			}
 		}
 	}

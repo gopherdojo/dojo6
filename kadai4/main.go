@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"math/rand"
 	"net/http"
 	"time"
 
@@ -11,8 +10,6 @@ import (
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":8080", nil)
 }
@@ -24,9 +21,16 @@ type Response struct {
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	_, m, d := time.Now().Date()
-	ret := omikuji.Do(int(m), d)
-	res := Response{Msg: ret}
+	omikuji := omikuji.Omikuji{time.Now()}
+	ret, err := omikuji.Do()
+	res := Response{}
+
+	if err != nil {
+		res.Msg = err.Error()
+		log.Println("Error:", err)
+	} else {
+		res.Msg = ret
+	}
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
 		log.Println("Error:", err)
