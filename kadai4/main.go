@@ -22,15 +22,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	omikuji := omikuji.Omikuji{time.Now()}
-	ret, err := omikuji.Do()
-	res := Response{}
-
-	if err != nil {
-		res.Msg = err.Error()
-		log.Println("Error:", err)
-	} else {
-		res.Msg = ret
-	}
+	res := Response{omikuji.Do()}
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
 		log.Println("Error:", err)

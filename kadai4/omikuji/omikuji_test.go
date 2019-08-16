@@ -11,7 +11,7 @@ func Test_NormalTime(t *testing.T) {
 	time := time.Date(2019, time.Month(8), 16, 0, 0, 0, 0, time.Local)
 	omikuji := omikuji.Omikuji{time}
 	expect := "大吉"
-	actual, _ := omikuji.Do()
+	actual := omikuji.Do()
 	if expect != actual {
 		t.Errorf(`Omikuji error: expect="%s" actual="%s"`, expect, actual)
 	}
@@ -28,7 +28,7 @@ func Test_SpecificPeriod(t *testing.T) {
 		for _, d := range days {
 			time := time.Date(2019, time.Month(m), d, 0, 0, 0, 0, time.Local)
 			omikuji := omikuji.Omikuji{time}
-			actual, _ := omikuji.Do()
+			actual := omikuji.Do()
 			if expect != actual {
 				t.Errorf(`Omikuji error: expect="%s" actual="%s"`, expect, actual)
 			}
