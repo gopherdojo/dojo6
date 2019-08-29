@@ -33,10 +33,9 @@ func MergeFiles(inputFiles []string, outputFileName string) error {
 	defer fw.Close()
 
 	for _, f := range inputFiles {
-		println(f)
 		fr, err := os.Open(f)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("Failed to open %v", f))
+			return errors.Wrap(err, fmt.Sprintf("Failed to open [%v]", f))
 		}
 		defer fr.Close()
 
