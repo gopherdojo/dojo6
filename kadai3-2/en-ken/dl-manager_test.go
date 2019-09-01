@@ -2,6 +2,12 @@ package divdl_test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"path/filepath"
+	"regexp"
+	"strconv"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -146,6 +152,108 @@ func TestDivideIntoRanges(t *testing.T) {
 			if !cmp.Equal(actual, c.expected) || n != c.expectedNum {
 				t.Errorf("failed. Diff:\n%v", cmp.Diff(actual, c.expected))
 			}
+		})
+	}
+}
+
+func TestDo(t *testing.T) {
+	type testCase struct {
+		newRequestError bool
+		downloadError   bool
+		canGetRange     bool
+	}
+
+	cases := []testCase{
+		{
+			canGetRange: true,
+		},
+		{
+			canGetRange: false,
+		},
+		{
+			newRequestError: true,
+		},
+		{
+			canGetRange:   true,
+			downloadError: true,
+		},
+		{
+			canGetRange:   false,
+			downloadError: true,
+		},
+	}
+
+	bodyStr := fmt.Sprintf("%v%v%v%v%v",
+		"0000000000",
+		"1111111111",
+		"2222222222",
+		"3333333333",
+		"4444444444",
+	)
+
+	divdl.SetMaxRangeSize(10)
+	tmpDir, _ := ioutil.TempDir("", ".tmp")
+	fileName := filepath.Join(tmpDir, "test.txt")
+
+	for i, c := range cases {
+		c := c
+
+		var testHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.Method {
+			case "HEAD":
+				if c.newRequestError {
+					w.WriteHeader(http.StatusMethodNotAllowed)
+					fmt.Fprint(w, "")
+					return
+				}
+
+				if c.canGetRange {
+					w.Header().Add("Accept-Ranges", "bytes")
+				}
+				w.Header().Add("Content-Length", fmt.Sprint(len(bodyStr)))
+				fmt.Print(w, "")
+			case "GET":
+				if c.downloadError {
+					w.WriteHeader(http.StatusForbidden)
+					fmt.Fprint(w, "")
+					return
+				}
+
+				rngStr := r.Header.Get("Range")
+				if rngStr != "" {
+					reg := regexp.MustCompile(`\d+`)
+					rngs := reg.FindAllString(rngStr, -1)
+					from, _ := strconv.ParseInt(rngs[0], 10, 0)
+					to, _ := strconv.ParseInt(rngs[1], 10, 0)
+					fmt.Fprint(w, bodyStr[from:to+1])
+				} else {
+					fmt.Fprint(w, bodyStr)
+				}
+			}
+		})
+		ts := httptest.NewServer(testHandler)
+		defer ts.Close()
+
+		t.Run(fmt.Sprintf("case %v", i), func(t *testing.T) {
+			err := divdl.Do(ts.URL, fileName, 3)
+			if err != nil {
+				if !c.newRequestError &&
+					!c.downloadError {
+					t.Errorf("Unexpected result: %v", err)
+				}
+			} else {
+				if c.newRequestError ||
+					c.downloadError {
+					t.Errorf("Unexpected result: newRequestError->%v, downloadError->%v",
+						c.newRequestError, c.downloadError)
+				}
+			}
+
+			actual, _ := ioutil.ReadFile(fileName)
+			if string(actual) != bodyStr {
+				t.Errorf("Downloading file is invalid data: %v", string(actual))
+			}
+
 		})
 	}
 }

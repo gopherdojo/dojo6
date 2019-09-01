@@ -21,4 +21,8 @@ type TestRange struct {
 	To   int64
 }
 
-const MaxRangeSize = maxRangeSize
+var MaxRangeSize = maxRangeSize
+
+func SetMaxRangeSize(size int64) {
+	maxRangeSize = size
+}

@@ -17,7 +17,7 @@ type DlRange struct {
 	to   int64
 }
 
-const maxRangeSize = 1024 * 1024 //1MB
+var maxRangeSize = int64(1024 * 1024) //1MB
 
 func divideIntoRanges(contentLength int64, numOfDivision int) (numOfRanges int, rngs [][]*DlRange) {
 	rngs = make([][]*DlRange, numOfDivision)
@@ -79,13 +79,13 @@ func Do(url string, fileName string, numOfDivision int) error {
 	n, rngs := divideIntoRanges(req.GetContentLength(), numOfDivision)
 
 	var g errgroup.Group
-	for _, rSet := range rngs {
-		rSet := rSet
+	for _, rList := range rngs {
+		rList := rList
 		g.Go(func() error {
-			for _, r := range rSet {
+			for _, r := range rList {
 				tmpFileName := createPartialFileName(fileName, r.id)
 
-				// pass downloading if tmpFileName exists.
+				// Pass downloading if tmpFileName exists.
 				if fileExists(tmpFileName) {
 					continue
 				}
