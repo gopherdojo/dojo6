@@ -107,11 +107,11 @@ func TestDivideIntoRanges(t *testing.T) {
 				},
 				{
 					&divdl.TestRange{ID: 1, From: divdl.MaxRangeSize, To: divdl.MaxRangeSize*2 - 1},
-					&divdl.TestRange{ID: 6, From: divdl.MaxRangeSize * 6, To: divdl.MaxRangeSize * 7},
+					&divdl.TestRange{ID: 6, From: divdl.MaxRangeSize * 6, To: divdl.MaxRangeSize*7 - 1},
 				},
 				{
 					&divdl.TestRange{ID: 2, From: divdl.MaxRangeSize * 2, To: divdl.MaxRangeSize*3 - 1},
-					&divdl.TestRange{ID: 7, From: divdl.MaxRangeSize * 7, To: divdl.MaxRangeSize*8 - 11},
+					&divdl.TestRange{ID: 7, From: divdl.MaxRangeSize * 7, To: divdl.MaxRangeSize*8 - 10 - 1},
 				},
 				{
 					&divdl.TestRange{ID: 3, From: divdl.MaxRangeSize * 3, To: divdl.MaxRangeSize*4 - 1},

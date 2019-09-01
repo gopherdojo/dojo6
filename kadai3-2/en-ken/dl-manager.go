@@ -2,6 +2,7 @@ package divdl
 
 import (
 	"fmt"
+	"os"
 
 	"golang.org/x/sync/errgroup"
 
@@ -32,7 +33,7 @@ func divideIntoRanges(contentLength int64, numOfDivision int) (numOfRanges int, 
 	}
 
 	for j, pos := 0, int64(0); pos < contentLength; j++ {
-		for i := 0; i < numOfDivision; i++ {
+		for i := 0; i < numOfDivision && pos < contentLength; i++ {
 			id := j*numOfDivision + i
 			numOfRanges = id + 1
 			// Last range
@@ -83,6 +84,12 @@ func Do(url string, fileName string, numOfDivision int) error {
 		g.Go(func() error {
 			for _, r := range rSet {
 				tmpFileName := createPartialFileName(fileName, r.id)
+
+				// pass downloading if tmpFileName exists.
+				if fileExists(tmpFileName) {
+					continue
+				}
+
 				data, err := req.DownloadPartially(r.from, r.to)
 				if err != nil {
 					return err
@@ -109,4 +116,9 @@ func Do(url string, fileName string, numOfDivision int) error {
 
 func createPartialFileName(fileName string, suffix int) string {
 	return fmt.Sprintf("%v.%v", fileName, suffix)
+}
+
+func fileExists(fileName string) bool {
+	_, err := os.Stat(fileName)
+	return err == nil
 }
