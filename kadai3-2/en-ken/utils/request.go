@@ -1,4 +1,4 @@
-package divdl
+package utils
 
 import (
 	"fmt"

@@ -5,6 +5,7 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
+	"github.com/gopherdojo/dojo6/kadai3-2/en-ken/utils"
 	"github.com/pkg/errors"
 )
 
@@ -15,15 +16,19 @@ type DlRange struct {
 	to   int64
 }
 
-// MaxRangeSize is limit size of range
-const MaxRangeSize = 1024 * 1024 //1MB
+const maxRangeSize = 1024 * 1024 //1MB
 
 func divideIntoRanges(contentLength int64, numOfDivision int) (numOfRanges int, rngs [][]*DlRange) {
 	rngs = make([][]*DlRange, numOfDivision)
 
-	rngSize := (contentLength + int64(numOfDivision)) / int64(numOfDivision)
-	if MaxRangeSize < rngSize {
-		rngSize = MaxRangeSize
+	var rngSize int64
+	if contentLength%int64(numOfDivision) == 0 {
+		rngSize = contentLength / int64(numOfDivision)
+	} else {
+		rngSize = (contentLength + int64(numOfDivision)) / int64(numOfDivision)
+	}
+	if maxRangeSize < rngSize {
+		rngSize = maxRangeSize
 	}
 
 	for j, pos := 0, int64(0); pos < contentLength; j++ {
@@ -54,7 +59,7 @@ func divideIntoRanges(contentLength int64, numOfDivision int) (numOfRanges int, 
 
 // Do manages separately downloading.
 func Do(url string, fileName string, numOfDivision int) error {
-	req, err := NewRequest(url)
+	req, err := utils.NewRequest(url)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -66,7 +71,7 @@ func Do(url string, fileName string, numOfDivision int) error {
 			return err
 		}
 
-		return SaveFile(fileName, data)
+		return utils.SaveFile(fileName, data)
 	}
 
 	// Range request is accepted
@@ -82,7 +87,7 @@ func Do(url string, fileName string, numOfDivision int) error {
 				if err != nil {
 					return err
 				}
-				if err := SaveFile(tmpFileName, data); err != nil {
+				if err := utils.SaveFile(tmpFileName, data); err != nil {
 					return err
 				}
 				fmt.Printf("%v saved\n", tmpFileName)
@@ -99,7 +104,7 @@ func Do(url string, fileName string, numOfDivision int) error {
 	for i := 0; i < n; i++ {
 		files = append(files, createPartialFileName(fileName, i))
 	}
-	return MergeFiles(files, fileName)
+	return utils.MergeFiles(files, fileName)
 }
 
 func createPartialFileName(fileName string, suffix int) string {

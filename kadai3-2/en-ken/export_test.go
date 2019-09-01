@@ -20,3 +20,5 @@ type TestRange struct {
 	From int64
 	To   int64
 }
+
+const MaxRangeSize = maxRangeSize

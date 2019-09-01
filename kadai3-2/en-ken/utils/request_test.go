@@ -1,4 +1,4 @@
-package divdl_test
+package utils
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	divdl "github.com/gopherdojo/dojo6/kadai3-2/en-ken"
+	"github.com/gopherdojo/dojo6/kadai3-2/en-ken/utils"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -49,7 +49,7 @@ func TestNewRequest(t *testing.T) {
 		ts := httptest.NewServer(testHandler)
 		defer ts.Close()
 
-		req, err := divdl.NewRequest(ts.URL)
+		req, err := utils.NewRequest(ts.URL)
 		if c.canHead {
 			if err != nil {
 				t.Errorf("Unexpected  result: %v", err)
@@ -135,7 +135,7 @@ func TestDownload(t *testing.T) {
 		defer ts.Close()
 
 		t.Run(fmt.Sprintf("case %v", i), func(t *testing.T) {
-			req, _ := divdl.NewRequest(ts.URL)
+			req, _ := utils.NewRequest(ts.URL)
 			var (
 				actual []byte
 				err    error

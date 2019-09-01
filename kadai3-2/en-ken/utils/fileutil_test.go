@@ -1,11 +1,11 @@
-package divdl_test
+package utils_test
 
 import (
 	"io/ioutil"
 	"path/filepath"
 	"testing"
 
-	divdl "github.com/gopherdojo/dojo6/kadai3-2/en-ken"
+	"github.com/gopherdojo/dojo6/kadai3-2/en-ken/utils"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -21,7 +21,7 @@ func TestSaveFile(t *testing.T) {
 	file := filepath.Join(tmpDir, "test.txt")
 
 	expected := []byte("foo\nbar\nbaz\n")
-	divdl.SaveFile(file, expected)
+	utils.SaveFile(file, expected)
 
 	actual, _ := ioutil.ReadFile(file)
 	if string(actual) != string(expected) {
@@ -57,7 +57,7 @@ func TestMergeFiles(t *testing.T) {
 	var inputFiles []string
 	var expected string
 	for _, fi := range fileInfo {
-		if err := divdl.SaveFile(fi.fileName, []byte(fi.data)); err != nil {
+		if err := utils.SaveFile(fi.fileName, []byte(fi.data)); err != nil {
 			t.Errorf("SaveFile failed: %v", err)
 		}
 		inputFiles = append(inputFiles, fi.fileName)
@@ -65,7 +65,7 @@ func TestMergeFiles(t *testing.T) {
 	}
 
 	mergedFile := filepath.Join(tmpDir, "merged.txt")
-	if err := divdl.MergeFiles(inputFiles, mergedFile); err != nil {
+	if err := utils.MergeFiles(inputFiles, mergedFile); err != nil {
 		t.Errorf("MergeFiles failed: %v", err)
 	}
 
