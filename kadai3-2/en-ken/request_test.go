@@ -105,7 +105,7 @@ func TestDownload(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
+	for i, c := range cases {
 		c := c
 		bodyStr := bodyStr
 
@@ -119,7 +119,8 @@ func TestDownload(t *testing.T) {
 				fmt.Print(w, "")
 			case "GET":
 				if c.canGet {
-					if r.Header.Get("Range") == c.rngStr {
+					rng := r.Header.Get("Range")
+					if rng != "" && rng == c.rngStr {
 						fmt.Fprint(w, bodyStr[c.from:c.to+1])
 					} else {
 						fmt.Fprint(w, bodyStr)
@@ -133,25 +134,27 @@ func TestDownload(t *testing.T) {
 		ts := httptest.NewServer(testHandler)
 		defer ts.Close()
 
-		req, _ := divdl.NewRequest(ts.URL)
-		var (
-			actual []byte
-			err    error
-		)
-		if req.CanAcceptRangeRequest() {
-			actual, err = req.DownloadPartially(c.from, c.to)
-		} else {
-			actual, err = req.Download()
-		}
-
-		if !c.canGet {
-			if err == nil {
-				t.Error("Unexpected http status")
+		t.Run(fmt.Sprintf("case %v", i), func(t *testing.T) {
+			req, _ := divdl.NewRequest(ts.URL)
+			var (
+				actual []byte
+				err    error
+			)
+			if req.CanAcceptRangeRequest() {
+				actual, err = req.DownloadPartially(c.from, c.to)
+			} else {
+				actual, err = req.Download()
 			}
-		}
 
-		if !cmp.Equal(c.expected, actual) {
-			t.Errorf("Unexpected response: Diff\n%v", cmp.Diff(c.expected, actual))
-		}
+			if !c.canGet {
+				if err == nil {
+					t.Error("Unexpected http status")
+				}
+			}
+
+			if !cmp.Equal(c.expected, actual) {
+				t.Errorf("Unexpected response: Diff\n%v", cmp.Diff(c.expected, actual))
+			}
+		})
 	}
 }

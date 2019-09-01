@@ -65,6 +65,9 @@ func (r *Request) download(extraHeaders map[string]string) ([]byte, error) {
 	}
 
 	resp, err := http.DefaultClient.Do(req)
+	if resp.Status[:1] != "2" {
+		return nil, errors.Errorf("Faild to request: %v", resp.StatusCode)
+	}
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
