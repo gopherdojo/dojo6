@@ -71,11 +71,34 @@ func TestNewRequest(t *testing.T) {
 }
 
 func TestDownload(t *testing.T) {
+	bodyStr := fmt.Sprintf("%v%v%v%v%v",
+		"0000000000",
+		"1111111111",
+		"2222222222",
+		"3333333333",
+		"4444444444",
+	)
+
 	cases := []struct {
-		canGet bool
+		canGet      bool
+		canGetRange bool
+		from        int64
+		to          int64
+		rngStr      string
+		expected    []byte
 	}{
 		{
-			canGet: true,
+			canGet:      true,
+			canGetRange: true,
+			from:        10,
+			to:          19,
+			rngStr:      "bytes=10-19",
+			expected:    []byte(bodyStr[10:20]),
+		},
+		{
+			canGet:      true,
+			canGetRange: false,
+			expected:    []byte(bodyStr),
 		},
 		{
 			canGet: false,
@@ -84,104 +107,50 @@ func TestDownload(t *testing.T) {
 
 	for _, c := range cases {
 		c := c
+		bodyStr := bodyStr
 
-		bodyStr := fmt.Sprintf("%v%v%v%v%v",
-			"0000000000",
-			"1111111111",
-			"2222222222",
-			"3333333333",
-			"4444444444",
-		)
 		var testHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.Method == "HEAD" {
-				w.Header().Add("Content-Length", fmt.Sprint(len(bodyStr)))
-				fmt.Print(w, "")
-				return
-			}
-
-			if c.canGet {
-				fmt.Fprintf(w, "%v", bodyStr)
-			} else {
-				w.WriteHeader(http.StatusNotFound)
-				fmt.Print(w, "")
-			}
-		})
-		ts := httptest.NewServer(testHandler)
-		defer ts.Close()
-
-		req, _ := divdl.NewRequest(ts.URL)
-		data, err := req.Download()
-		if !c.canGet {
-			if err == nil {
-				t.Error("Unexpected http status")
-			}
-			return
-		}
-
-		if !cmp.Equal([]byte(bodyStr), data) {
-			t.Errorf("Unexpected response: Diff\n%v", cmp.Diff(bodyStr, data))
-		}
-	}
-}
-
-func TestDownloadPartially(t *testing.T) {
-	cases := []struct {
-		canGet   bool
-		from     int64
-		to       int64
-		rngStr   string
-		expected string
-	}{
-		{
-			canGet:   true,
-			from:     0,
-			to:       10,
-			rngStr:   "bytes=0-10",
-			expected: "0000000000",
-		},
-		{
-			canGet: false,
-		},
-	}
-
-	for _, c := range cases {
-		c := c
-
-		bodyStr := fmt.Sprintf("%v%v%v%v%v",
-			"0000000000",
-			"1111111111",
-			"2222222222",
-			"3333333333",
-			"4444444444",
-		)
-		var testHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.Method == "HEAD" {
-				w.Header().Add("Accept-Ranges", "bytes")
-				w.Header().Add("Content-Length", fmt.Sprint(len(bodyStr)))
-				fmt.Print(w, "")
-			}
-			if c.canGet {
-				if c.rngStr == r.Header.Get("Range") {
-					fmt.Fprint(w, "0000000000")
+			switch r.Method {
+			case "HEAD":
+				if c.canGetRange {
+					w.Header().Add("Accept-Ranges", "bytes")
 				}
-			} else {
-				w.WriteHeader(http.StatusNotFound)
-				fmt.Fprint(w, "")
+				w.Header().Add("Content-Length", fmt.Sprint(len(bodyStr)))
+				fmt.Print(w, "")
+			case "GET":
+				if c.canGet {
+					if r.Header.Get("Range") == c.rngStr {
+						fmt.Fprint(w, bodyStr[c.from:c.to+1])
+					} else {
+						fmt.Fprint(w, bodyStr)
+					}
+				} else {
+					w.WriteHeader(http.StatusNotFound)
+					fmt.Fprint(w, "")
+				}
 			}
-
 		})
 		ts := httptest.NewServer(testHandler)
 		defer ts.Close()
 
 		req, _ := divdl.NewRequest(ts.URL)
-		actual, err := req.DownloadPartially(c.from, c.to)
+		var (
+			actual []byte
+			err    error
+		)
+		if req.CanAcceptRangeRequest() {
+			actual, err = req.DownloadPartially(c.from, c.to)
+		} else {
+			actual, err = req.Download()
+		}
+
 		if !c.canGet {
 			if err == nil {
 				t.Error("Unexpected http status")
 			}
 		}
 
-		if !cmp.Equal([]byte(c.expected), actual) {
+		if !cmp.Equal(c.expected, actual) {
 			t.Errorf("Unexpected response: Diff\n%v", cmp.Diff(c.expected, actual))
 		}
 	}
